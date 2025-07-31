@@ -43,3 +43,11 @@ func TestParkCar(t *testing.T) {
 		t.Errorf("Vehicle not parked")
 	}
 }
+
+func TestCreateParkingLotStruct(t *testing.T) {
+	_, err := NewParkingLot((10))
+	if err != nil {
+		t.Errorf("Parking Lot is not created")
+	}
+
+}

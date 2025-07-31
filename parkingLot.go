@@ -8,7 +8,11 @@ type Lot struct {
 	Occupied    bool
 }
 
-func NewParkingLot(capacity int) ([]Lot, error) {
+type ParkingLot struct {
+	slots []Lot
+}
+
+func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")
 	}
@@ -22,13 +26,13 @@ func NewParkingLot(capacity int) ([]Lot, error) {
 		lots = append(lots, newLot)
 	}
 
-	return lots, nil
+	return &ParkingLot{lots}, nil
 }
 
 func Park(s string) Lot {
-	lots, _ := NewParkingLot(10)
-	lots[2].NumberPlate = s
-	lots[2].Occupied = true
+	parkinglot, _ := NewParkingLot(10)
+	parkinglot.slots[2].NumberPlate = s
+	parkinglot.slots[2].Occupied = true
 
-	return lots[2]
+	return parkinglot.slots[2]
 }
