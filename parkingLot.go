@@ -24,3 +24,11 @@ func NewParkingLot(capacity int) ([]Lot, error) {
 
 	return lots, nil
 }
+
+func Park(s string) Lot {
+	lots, _ := NewParkingLot(10)
+	lots[2].NumberPlate = s
+	lots[2].Occupied = true
+
+	return lots[2]
+}
