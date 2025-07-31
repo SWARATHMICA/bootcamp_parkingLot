@@ -33,9 +33,9 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{lots}, nil
 }
 
-func (p *ParkingLot) Park(s string) bool {
+func (p *ParkingLot) Park(c Car) bool {
 
-	p.slots[0].NumberPlate = s
+	p.slots[0].NumberPlate = c.numberPlate
 	p.slots[0].Occupied = true
 
 	return true

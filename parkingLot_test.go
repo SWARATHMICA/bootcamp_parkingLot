@@ -39,7 +39,10 @@ func TestCannotCreateParkingLotWithCapacityLessThanOne(t *testing.T) {
 
 func TestParkCar(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	parked := parkingLot.Park("KK-10-AA-1234")
+	car := Car{
+		numberPlate: "KJ-09-AK-123",
+	}
+	parked := parkingLot.Park(car)
 	if !parked {
 		t.Errorf("Vehicle not parked")
 	}
