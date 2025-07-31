@@ -33,10 +33,10 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{lots}, nil
 }
 
-func Park(s string) Lot {
-	parkinglot, _ := NewParkingLot(10)
-	parkinglot.slots[2].NumberPlate = s
-	parkinglot.slots[2].Occupied = true
+func (p *ParkingLot) Park(s string) bool {
 
-	return parkinglot.slots[2]
+	p.slots[0].NumberPlate = s
+	p.slots[0].Occupied = true
+
+	return true
 }
