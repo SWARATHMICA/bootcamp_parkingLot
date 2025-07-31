@@ -1,6 +1,8 @@
 package parkinglot
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCreateLot(t *testing.T) {
 	firstLot := &Lot{
@@ -11,5 +13,19 @@ func TestCreateLot(t *testing.T) {
 
 	if firstLot.Id == 0 {
 		t.Error("Struct Lot cannot be created with Id 0")
+	}
+}
+
+func TestCreateParkingLot(t *testing.T) {
+	_, err := NewParkingLot(10)
+	if err != nil {
+		t.Error("Parking lot is not created")
+	}
+}
+
+func TestCreateEmptyLotsInParkingLot(t *testing.T) {
+	_, err := NewParkingLot(10)
+	if err != nil {
+		t.Error("Empty lots are not created in ParkingLot")
 	}
 }
