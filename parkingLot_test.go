@@ -29,3 +29,10 @@ func TestCreateEmptyLotsInParkingLot(t *testing.T) {
 		t.Error("Empty lots are not created in ParkingLot")
 	}
 }
+
+func TestCannotCreateParkingLotWithCapacityLessThanOne(t *testing.T) {
+	_, err := NewParkingLot(-1)
+	if err == nil {
+		t.Error("Parking lot cannot be created with capacity less than 1")
+	}
+}
