@@ -51,3 +51,14 @@ func TestCreateParkingLotStruct(t *testing.T) {
 	}
 
 }
+
+func TestCreateCarStruct(t *testing.T) {
+	car := &Car{
+
+		NumberPlate: "KJ-09-AK-123",
+	}
+
+	if car.NumberPlate == "" {
+		t.Error("Struct Car cannot be created without NumberPlate")
+	}
+}
