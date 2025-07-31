@@ -13,7 +13,7 @@ type ParkingLot struct {
 }
 
 type Car struct {
-	NumberPlate string
+	numberPlate string
 }
 
 func NewParkingLot(capacity int) (*ParkingLot, error) {
