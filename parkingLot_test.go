@@ -164,3 +164,11 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 	}
 
 }
+
+func TestOwnerStruct(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	o := Owner{Name: "abc", ParkingLot: p}
+	if o.Name != "abc" {
+		t.Error("Owner struct not created")
+	}
+}

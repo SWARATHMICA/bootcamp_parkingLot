@@ -17,6 +17,11 @@ type Car struct {
 	numberPlate string
 }
 
+type Owner struct {
+	Name string
+	*ParkingLot
+}
+
 func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")
