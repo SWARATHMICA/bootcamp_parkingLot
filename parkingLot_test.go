@@ -149,3 +149,18 @@ func TestCarIsParked(t *testing.T) {
 	}
 
 }
+func TestCheckIfCarAlreadyParked(t *testing.T) {
+	p, _ := NewParkingLot(2)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	car2 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	p.Park((*car1))
+	_, err := p.Park(*car2)
+	if err == nil {
+		t.Errorf("Car is already parked")
+	}
+
+}
