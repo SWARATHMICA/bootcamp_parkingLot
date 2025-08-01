@@ -107,3 +107,17 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 	}
 
 }
+
+func TestUnparkCar(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	car := &Car{
+		numberPlate: "KK-09-AK-2341",
+	}
+	p.Park(*car)
+
+	result := p.Unpark(*car)
+	if !result {
+		t.Errorf("Car not unparked")
+
+	}
+}

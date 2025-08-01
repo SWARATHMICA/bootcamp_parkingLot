@@ -45,3 +45,14 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 	return false, errors.New("ParkingLot is full")
 
 }
+
+func (p *ParkingLot) Unpark(car Car) bool {
+	for i := 0; i < p.capacity; i++ {
+		if p.slots[i].Occupied && p.slots[i].NumberPlate == car.numberPlate {
+			p.slots[i].NumberPlate = ""
+			p.slots[i].Occupied = false
+			return true
+		}
+	}
+	return false
+}
