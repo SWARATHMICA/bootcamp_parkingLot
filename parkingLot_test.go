@@ -73,3 +73,20 @@ func TestParkingLotCreationWithCapacity(t *testing.T) {
 		t.Errorf("ParkingLot has not been created with capacity 1")
 	}
 }
+
+func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	car2 := &Car{
+		numberPlate: "KK-09-AK-2341",
+	}
+	p.Park((*car1))
+	result := p.Park(*car2)
+
+	if result {
+		t.Errorf("Cannot park car since no slots are empty")
+	}
+
+}

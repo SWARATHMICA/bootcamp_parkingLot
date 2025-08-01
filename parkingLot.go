@@ -35,9 +35,13 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 }
 
 func (p *ParkingLot) Park(c Car) bool {
+	for i := 0; i < p.capacity; i++ {
+		if !p.slots[i].Occupied {
+			p.slots[i].NumberPlate = c.numberPlate
+			p.slots[i].Occupied = true
+			return true
+		}
+	}
+	return false
 
-	p.slots[0].NumberPlate = c.numberPlate
-	p.slots[0].Occupied = true
-
-	return true
 }
