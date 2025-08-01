@@ -172,3 +172,34 @@ func TestOwnerStruct(t *testing.T) {
 		t.Error("Owner struct not created")
 	}
 }
+
+func TestNotifyOwner(t *testing.T) {
+	parkinglotwith1Capacity, _ := NewParkingLot(1)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	parkinglotwith1Capacity.Park(*car1)
+
+	owner := Owner{Name: "abc", ParkingLot: parkinglotwith1Capacity}
+	message := owner.notify()
+	expectedMessage := "ParkingLot is full!!!!"
+	if message != expectedMessage {
+		t.Errorf("Parking lot is full")
+	}
+
+}
+func TestNotifyOwnerWhenParkingLotAvailable(t *testing.T) {
+	parkinglotwith2Capacity, _ := NewParkingLot(2)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	parkinglotwith2Capacity.Park(*car1)
+
+	owner := Owner{Name: "abc", ParkingLot: parkinglotwith2Capacity}
+	message := owner.notify()
+	expectedMessage := "Parking lot available"
+	if message != expectedMessage {
+		t.Errorf("Parking lot should be available")
+	}
+
+}

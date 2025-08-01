@@ -73,3 +73,13 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	}
 	return false
 }
+
+func (o *Owner) notify() string {
+	for _, p := range o.ParkingLot.slots {
+		if !p.occupied {
+			return "Parking lot available"
+		}
+
+	}
+	return "ParkingLot is full!!!!"
+}
