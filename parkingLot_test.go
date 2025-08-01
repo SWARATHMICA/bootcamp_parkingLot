@@ -66,3 +66,10 @@ func TestCreateCarStruct(t *testing.T) {
 		t.Error("Struct Car cannot be created without NumberPlate")
 	}
 }
+
+func TestParkingLotCreationWithCapacity(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	if p.capacity != 1 {
+		t.Errorf("ParkingLot has not been created with capacity 1")
+	}
+}

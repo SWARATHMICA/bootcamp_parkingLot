@@ -9,7 +9,8 @@ type Lot struct {
 }
 
 type ParkingLot struct {
-	slots []Lot
+	capacity int
+	slots    []Lot
 }
 
 type Car struct {
@@ -30,7 +31,7 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 		lots = append(lots, newLot)
 	}
 
-	return &ParkingLot{lots}, nil
+	return &ParkingLot{slots: lots, capacity: capacity}, nil
 }
 
 func (p *ParkingLot) Park(c Car) bool {
