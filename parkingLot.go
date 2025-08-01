@@ -22,6 +22,11 @@ type Owner struct {
 	*ParkingLot
 }
 
+type Other struct {
+	Name string
+	Role string
+}
+
 func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")

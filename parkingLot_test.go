@@ -203,3 +203,11 @@ func TestNotifyOwnerWhenParkingLotAvailable(t *testing.T) {
 	}
 
 }
+
+func TestOtherStruct(t *testing.T) {
+	other := Other{Name: "abc", Role: "cop"}
+
+	if other.Name != "abc" {
+		t.Errorf("Other struct is not created")
+	}
+}
