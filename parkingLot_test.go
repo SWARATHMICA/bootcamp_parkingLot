@@ -91,14 +91,22 @@ func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 
 }
 
+type mockObserver struct {
+	notifiedTimes int
+}
+
+func (m *mockObserver) notify() {
+	m.notifiedTimes++
+}
+
 func TestCheckIfParkingLotIsFull(t *testing.T) {
-	p, _ := NewParkingLot(1)
 	car1 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
 	car2 := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
+	p, _ := NewParkingLot(1)
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 
@@ -108,6 +116,19 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 
 }
 
+func TestObserverShouldbenotifiedTwiceWhenParkingFull(t *testing.T) {
+	m := mockObserver{}
+	p, _ := NewParkingLot(1)
+	p.setObserver(&m)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	p.Park(*car1)
+	if m.notifiedTimes != 2 {
+		t.Errorf("mock observer should have been notified twice only")
+	}
+
+}
 func TestUnparkCar(t *testing.T) {
 	p, _ := NewParkingLot(1)
 	car := &Car{
@@ -166,42 +187,11 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 }
 
 func TestOwnerStruct(t *testing.T) {
-	p, _ := NewParkingLot(1)
-	o := Owner{Name: "abc", ParkingLot: p}
+
+	o := Owner{Name: "abc"}
 	if o.Name != "abc" {
 		t.Error("Owner struct not created")
 	}
-}
-
-func TestNotifyOwner(t *testing.T) {
-	parkinglotwith1Capacity, _ := NewParkingLot(1)
-	car1 := &Car{
-		numberPlate: "KK-09-AK-1234",
-	}
-	parkinglotwith1Capacity.Park(*car1)
-
-	owner := Owner{Name: "abc", ParkingLot: parkinglotwith1Capacity}
-	message := owner.notify()
-	expectedMessage := "ParkingLot is full!!!!"
-	if message != expectedMessage {
-		t.Errorf("Parking lot is full")
-	}
-
-}
-func TestNotifyOwnerWhenParkingLotAvailable(t *testing.T) {
-	parkinglotwith2Capacity, _ := NewParkingLot(2)
-	car1 := &Car{
-		numberPlate: "KK-09-AK-1234",
-	}
-	parkinglotwith2Capacity.Park(*car1)
-
-	owner := Owner{Name: "abc", ParkingLot: parkinglotwith2Capacity}
-	message := owner.notify()
-	expectedMessage := "Parking lot available"
-	if message != expectedMessage {
-		t.Errorf("Parking lot should be available")
-	}
-
 }
 
 func TestOtherStruct(t *testing.T) {
@@ -209,27 +199,5 @@ func TestOtherStruct(t *testing.T) {
 
 	if other.Name != "abc" {
 		t.Errorf("Other struct is not created")
-	}
-}
-
-func TestNotifyOthers(t *testing.T){
-	parkinglotwith1Capacity, _ := NewParkingLot(1)
-	car1 := &Car{
-		numberPlate: "KK-09-AK-1234",
-	}
-	parkinglotwith1Capacity.Park(*car1)
-	owner:=Owner{Name:"abc", ParkingLot: parkinglotwith1Capacity}
-	
-	other:= make([]Other,0,10)
-
-	p1:= Other{Name: "tintin", Role: "Guard"}
-
-	other = append(other, p1)
-	expectedMessage:="ParkingLot is full!!!!"
-	for _,ot:= range other{
-		result:=ot.notify(owner.notify())
-		if result != expectedMessage{
-			t.Errorf("ParkingLot is full")
-		}
 	}
 }

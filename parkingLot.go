@@ -1,6 +1,8 @@
 package parkinglot
 
-import "errors"
+import (
+	"errors"
+)
 
 type slot struct {
 	id          int
@@ -11,6 +13,15 @@ type slot struct {
 type ParkingLot struct {
 	capacity int
 	slots    []slot
+	observer observer
+}
+
+func (p *ParkingLot) setObserver(observer observer) {
+	p.observer = observer
+}
+
+type observer interface {
+	notify()
 }
 
 type Car struct {
@@ -19,7 +30,6 @@ type Car struct {
 
 type Owner struct {
 	Name string
-	*ParkingLot
 }
 
 type Other struct {
@@ -52,7 +62,11 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 		if !p.slots[i].occupied {
 			p.slots[i].numberPlate = c.numberPlate
 			p.slots[i].occupied = true
+			if i == p.capacity-1 {
+				p.notifyObserver()
+			}
 			return true, nil
+
 		}
 	}
 	return false, errors.New("ParkingLot is full")
@@ -79,20 +93,11 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (o *Owner) notify() string {
-	for _, p := range o.ParkingLot.slots {
-		if !p.occupied {
-			return "Parking lot available"
-		}
-
-	}
-	return "ParkingLot is full!!!!"
+func (o *Owner) parkingLotFull() string {
+	// o.notified = true
+	return "we are closed"
 }
+func (p *ParkingLot) notifyObserver() {
+	p.observer.notify()
 
-func (o *Other)notify(message string) string{
-	if message=="ParkingLot is full!!!!"{
-
-		return message
-	}
-	return ""
 }
