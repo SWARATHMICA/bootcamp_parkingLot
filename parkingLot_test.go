@@ -115,9 +115,22 @@ func TestUnparkCar(t *testing.T) {
 	}
 	p.Park(*car)
 
-	result := p.Unpark(*car)
+	result, _ := p.Unpark(*car)
 	if !result {
 		t.Errorf("Car not unparked")
 
+	}
+}
+
+func TestUnparkCarNotFound(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	car := &Car{
+		numberPlate: "KK-09-AK-2341",
+	}
+	p.Park(*car)
+
+	_, err := p.Unpark(*car)
+	if err != nil {
+		t.Errorf("Car not found")
 	}
 }
