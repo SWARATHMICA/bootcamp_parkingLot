@@ -56,3 +56,12 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 	}
 	return false, errors.New("Car is not found in the parking lot")
 }
+
+func (p *ParkingLot) IsParked(car Car) bool {
+	for _, slot := range p.slots {
+		if slot.Occupied && slot.NumberPlate == car.numberPlate {
+			return true
+		}
+	}
+	return false
+}
