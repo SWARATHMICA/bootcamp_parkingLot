@@ -5,7 +5,7 @@ import (
 )
 
 func TestCreateLot(t *testing.T) {
-	firstLot := &Lot{
+	firstLot := &Slot{
 		Id:          1,
 		NumberPlate: "KJ-09-AK-123",
 		Occupied:    false,

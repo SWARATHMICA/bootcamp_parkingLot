@@ -2,7 +2,7 @@ package parkinglot
 
 import "errors"
 
-type Lot struct {
+type Slot struct {
 	Id          int
 	NumberPlate string
 	Occupied    bool
@@ -10,7 +10,7 @@ type Lot struct {
 
 type ParkingLot struct {
 	capacity int
-	slots    []Lot
+	slots    []Slot
 }
 
 type Car struct {
@@ -21,9 +21,9 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")
 	}
-	lots := make([]Lot, 0, capacity)
+	lots := make([]Slot, 0, capacity)
 	for i := 0; i < capacity; i++ {
-		newLot := Lot{
+		newLot := Slot{
 			Id:          i + 1,
 			NumberPlate: "",
 			Occupied:    false,
