@@ -2,15 +2,15 @@ package parkinglot
 
 import "errors"
 
-type Slot struct {
-	Id          int
-	NumberPlate string
-	Occupied    bool
+type slot struct {
+	id          int
+	numberPlate string
+	occupied    bool
 }
 
 type ParkingLot struct {
 	capacity int
-	slots    []Slot
+	slots    []slot
 }
 
 type Car struct {
@@ -21,12 +21,12 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")
 	}
-	lots := make([]Slot, 0, capacity)
+	lots := make([]slot, 0, capacity)
 	for i := 0; i < capacity; i++ {
-		newLot := Slot{
-			Id:          i + 1,
-			NumberPlate: "",
-			Occupied:    false,
+		newLot := slot{
+			id:          i + 1,
+			numberPlate: "",
+			occupied:    false,
 		}
 		lots = append(lots, newLot)
 	}
@@ -36,9 +36,9 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 
 func (p *ParkingLot) Park(c Car) (bool, error) {
 	for i := 0; i < p.capacity; i++ {
-		if !p.slots[i].Occupied {
-			p.slots[i].NumberPlate = c.numberPlate
-			p.slots[i].Occupied = true
+		if !p.slots[i].occupied {
+			p.slots[i].numberPlate = c.numberPlate
+			p.slots[i].occupied = true
 			return true, nil
 		}
 	}
@@ -49,8 +49,8 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 func (p *ParkingLot) Unpark(car Car) (bool, error) {
 	for i := 0; i < p.capacity; i++ {
 		if p.IsParked(car) {
-			p.slots[i].NumberPlate = ""
-			p.slots[i].Occupied = false
+			p.slots[i].numberPlate = ""
+			p.slots[i].occupied = false
 			return true, nil
 		}
 	}
@@ -59,7 +59,7 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 
 func (p *ParkingLot) IsParked(car Car) bool {
 	for _, slot := range p.slots {
-		if slot.Occupied && slot.NumberPlate == car.numberPlate {
+		if slot.occupied && slot.numberPlate == car.numberPlate {
 			return true
 		}
 	}

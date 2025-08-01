@@ -5,13 +5,13 @@ import (
 )
 
 func TestCreateLot(t *testing.T) {
-	firstLot := &Slot{
-		Id:          1,
-		NumberPlate: "KJ-09-AK-123",
-		Occupied:    false,
+	firstLot := &slot{
+		id:          1,
+		numberPlate: "KJ-09-AK-123",
+		occupied:    false,
 	}
 
-	if firstLot.Id == 0 {
+	if firstLot.id == 0 {
 		t.Error("Struct Lot cannot be created with Id 0")
 	}
 }
