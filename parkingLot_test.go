@@ -211,3 +211,25 @@ func TestOtherStruct(t *testing.T) {
 		t.Errorf("Other struct is not created")
 	}
 }
+
+func TestNotifyOthers(t *testing.T){
+	parkinglotwith1Capacity, _ := NewParkingLot(1)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	parkinglotwith1Capacity.Park(*car1)
+	owner:=Owner{Name:"abc", ParkingLot: parkinglotwith1Capacity}
+	
+	other:= make([]Other,0,10)
+
+	p1:= Other{Name: "tintin", Role: "Guard"}
+
+	other = append(other, p1)
+	expectedMessage:="ParkingLot is full!!!!"
+	for _,ot:= range other{
+		result:=ot.notify(owner.notify())
+		if result != expectedMessage{
+			t.Errorf("ParkingLot is full")
+		}
+	}
+}

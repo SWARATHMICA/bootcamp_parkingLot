@@ -88,3 +88,11 @@ func (o *Owner) notify() string {
 	}
 	return "ParkingLot is full!!!!"
 }
+
+func (o *Other)notify(message string) string{
+	if message=="ParkingLot is full!!!!"{
+
+		return message
+	}
+	return ""
+}
