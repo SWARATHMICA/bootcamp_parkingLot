@@ -34,14 +34,14 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{slots: lots, capacity: capacity}, nil
 }
 
-func (p *ParkingLot) Park(c Car) bool {
+func (p *ParkingLot) Park(c Car) (bool, error) {
 	for i := 0; i < p.capacity; i++ {
 		if !p.slots[i].Occupied {
 			p.slots[i].NumberPlate = c.numberPlate
 			p.slots[i].Occupied = true
-			return true
+			return true, nil
 		}
 	}
-	return false
+	return false, errors.New("ParkingLot is full")
 
 }

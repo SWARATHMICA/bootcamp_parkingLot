@@ -42,7 +42,7 @@ func TestParkCar(t *testing.T) {
 	car := Car{
 		numberPlate: "KJ-09-AK-123",
 	}
-	parked := parkingLot.Park(car)
+	parked, _ := parkingLot.Park(car)
 	if !parked {
 		t.Errorf("Vehicle not parked")
 	}
@@ -83,10 +83,27 @@ func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 		numberPlate: "KK-09-AK-2341",
 	}
 	p.Park((*car1))
-	result := p.Park(*car2)
+	result, _ := p.Park(*car2)
 
 	if result {
 		t.Errorf("Cannot park car since no slots are empty")
+	}
+
+}
+
+func TestCheckIfParkingLotIsFull(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	car2 := &Car{
+		numberPlate: "KK-09-AK-2341",
+	}
+	p.Park((*car1))
+	_, err := p.Park(*car2)
+
+	if err == nil {
+		t.Errorf("ParkingLot is full")
 	}
 
 }
