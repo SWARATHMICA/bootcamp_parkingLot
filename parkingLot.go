@@ -32,11 +32,6 @@ type Owner struct {
 	Name string
 }
 
-type Other struct {
-	Name string
-	Role string
-}
-
 func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")
@@ -93,10 +88,6 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (o *Owner) parkingLotFull() string {
-	// o.notified = true
-	return "we are closed"
-}
 func (p *ParkingLot) notifyObserver() {
 	p.observer.notify()
 

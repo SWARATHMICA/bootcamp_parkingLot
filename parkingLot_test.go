@@ -193,11 +193,3 @@ func TestOwnerStruct(t *testing.T) {
 		t.Error("Owner struct not created")
 	}
 }
-
-func TestOtherStruct(t *testing.T) {
-	other := Other{Name: "abc", Role: "cop"}
-
-	if other.Name != "abc" {
-		t.Errorf("Other struct is not created")
-	}
-}
