@@ -2,7 +2,6 @@ package parkinglot
 
 import (
 	"errors"
-	"fmt"
 )
 
 type observer interface {
@@ -60,7 +59,11 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 		if !p.slots[i].occupied {
 			p.slots[i].numberPlate = c.numberPlate
 			p.slots[i].occupied = true
-			p.checkAndNotify()
+			if i == p.capacity-1 {
+
+				p.notifyFull()
+				p.isFull = true
+			}
 			return true, nil
 
 		}
@@ -74,7 +77,11 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 		if p.IsParked(car) {
 			p.slots[i].numberPlate = ""
 			p.slots[i].occupied = false
-			p.checkAndNotify()
+			if p.isFull {
+
+				p.notifyAvailable()
+				p.isFull = false
+			}
 			return true, nil
 		}
 	}
@@ -90,32 +97,10 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (o Owner) notifyFull() {
-	fmt.Printf("Owner %s: Parking lot is FULL. Please put up the sign.\n", o.Name)
+func (p *ParkingLot) notifyFull() string {
+	return "Parking lot is FULL. Please put up the sign."
 }
 
-func (o Owner) notifyAvailable() {
-	fmt.Printf("Owner %s: Parking lot has space again. Please remove the sign.\n", o.Name)
-}
-
-func (p *ParkingLot) checkAndNotify() {
-	full := true
-	for _, s := range p.slots {
-		if !s.occupied {
-			full = false
-			break
-		}
-	}
-
-	if full && !p.isFull {
-		p.isFull = true
-		if p.observer != nil {
-			p.observer.notifyFull()
-		}
-	} else if !full && p.isFull {
-		p.isFull = false
-		if p.observer != nil {
-			p.observer.notifyAvailable()
-		}
-	}
+func (p *ParkingLot) notifyAvailable() string {
+	return "Parking lot has space again. Please remove the sign."
 }
