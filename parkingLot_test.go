@@ -176,7 +176,7 @@ type checkObserver struct {
 	Called bool
 }
 
-func (s *checkObserver) notify() {
+func (s *checkObserver) notify(message string) {
 	s.Called = true
 }
 
@@ -191,13 +191,14 @@ func TestSetObserver(t *testing.T) {
 	}
 }
 
-func TestObserverMethodsCalled(t *testing.T) {
+func TestCheckNotifyCalledOnObserver(t *testing.T) {
 	s := &checkObserver{}
-	s.Called = false
-	s.notify()
+	p, _ := NewParkingLot(1)
+	p.setObserver(s)
+	car := Car{numberPlate: "MH10AA12234"}
+	p.Park(car)
 
 	if !s.Called {
-		t.Error("Expected notifyFull to be called")
+		t.Errorf("Notify not called")
 	}
-
 }
