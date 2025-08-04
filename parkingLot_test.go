@@ -42,6 +42,7 @@ func TestParkCar(t *testing.T) {
 	car := Car{
 		numberPlate: "KJ-09-AK-123",
 	}
+	parkingLot.setObserver(&checkObserver{})
 	parked, _ := parkingLot.Park(car)
 	if !parked {
 		t.Errorf("Vehicle not parked")
@@ -76,6 +77,7 @@ func TestParkingLotCreationWithCapacity(t *testing.T) {
 
 func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 	p, _ := NewParkingLot(1)
+	p.setObserver(&checkObserver{})
 	car1 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
@@ -99,6 +101,7 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 		numberPlate: "KK-09-AK-2341",
 	}
 	p, _ := NewParkingLot(1)
+	p.setObserver(&checkObserver{})
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 
@@ -113,6 +116,7 @@ func TestUnparkCar(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
+	p.setObserver(&checkObserver{})
 	p.Park(*car)
 
 	result, _ := p.Unpark(*car)
@@ -127,6 +131,7 @@ func TestUnparkCarNotFound(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
+	p.setObserver(&checkObserver{})
 	p.Park(*car)
 
 	_, err := p.Unpark(*car)
@@ -140,6 +145,7 @@ func TestCarIsParked(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
+	p.setObserver(&checkObserver{})
 	p.Park(*car)
 
 	result := p.IsParked(*car)
@@ -157,12 +163,21 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 	car2 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
+	p.setObserver(&checkObserver{})
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 	if err == nil {
 		t.Errorf("Car is already parked")
 	}
 
+}
+
+type checkObserver struct {
+	Called bool
+}
+
+func (s *checkObserver) notify() {
+	s.Called = true
 }
 
 func TestSetObserver(t *testing.T) {
@@ -176,28 +191,13 @@ func TestSetObserver(t *testing.T) {
 	}
 }
 
-type checkObserver struct {
-	fullCalled      bool
-	availableCalled bool
-}
-
-func (s *checkObserver) notifyFull() {
-	s.fullCalled = true
-}
-
-func (s *checkObserver) notifyAvailable() {
-	s.availableCalled = true
-}
-
 func TestObserverMethodsCalled(t *testing.T) {
 	s := &checkObserver{}
-	s.notifyFull()
-	s.notifyAvailable()
+	s.Called = false
+	s.notify()
 
-	if !s.fullCalled {
+	if !s.Called {
 		t.Error("Expected notifyFull to be called")
 	}
-	if !s.availableCalled {
-		t.Error("Expected notifyAvailable to be called")
-	}
+
 }
