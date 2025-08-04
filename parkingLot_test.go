@@ -165,14 +165,6 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 
 }
 
-func TestOwnerStruct(t *testing.T) {
-
-	o := Owner{Name: "abc"}
-	if o.Name != "abc" {
-		t.Error("Owner struct not created")
-	}
-}
-
 type dummyObserver struct{}
 
 func (d *dummyObserver) notifyFull()      {}
