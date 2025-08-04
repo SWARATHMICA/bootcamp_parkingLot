@@ -20,6 +20,7 @@ type ParkingLot struct {
 	capacity int
 	slots    []slot
 	observer observer
+	isFull   bool
 }
 
 func (p *ParkingLot) setObserver(observer observer) {
@@ -59,6 +60,7 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 		if !p.slots[i].occupied {
 			p.slots[i].numberPlate = c.numberPlate
 			p.slots[i].occupied = true
+			p.checkAndNotify()
 			return true, nil
 
 		}
@@ -72,6 +74,7 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 		if p.IsParked(car) {
 			p.slots[i].numberPlate = ""
 			p.slots[i].occupied = false
+			p.checkAndNotify()
 			return true, nil
 		}
 	}
@@ -93,4 +96,26 @@ func (o Owner) notifyFull() {
 
 func (o Owner) notifyAvailable() {
 	fmt.Printf("Owner %s: Parking lot has space again. Please remove the sign.\n", o.Name)
+}
+
+func (p *ParkingLot) checkAndNotify() {
+	full := true
+	for _, s := range p.slots {
+		if !s.occupied {
+			full = false
+			break
+		}
+	}
+
+	if full && !p.isFull {
+		p.isFull = true
+		if p.observer != nil {
+			p.observer.notifyFull()
+		}
+	} else if !full && p.isFull {
+		p.isFull = false
+		if p.observer != nil {
+			p.observer.notifyAvailable()
+		}
+	}
 }
