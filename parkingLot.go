@@ -3,6 +3,10 @@ package parkinglot
 import (
 	"errors"
 )
+type observer interface {
+	notifyFull()
+	notifyAvailable()
+}
 
 type slot struct {
 	id          int
@@ -18,10 +22,6 @@ type ParkingLot struct {
 
 func (p *ParkingLot) setObserver(observer observer) {
 	p.observer = observer
-}
-
-type observer interface {
-	notify()
 }
 
 type Car struct {
@@ -57,9 +57,6 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 		if !p.slots[i].occupied {
 			p.slots[i].numberPlate = c.numberPlate
 			p.slots[i].occupied = true
-			if i == p.capacity-1 {
-				p.notifyObserver()
-			}
 			return true, nil
 
 		}
@@ -88,7 +85,3 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (p *ParkingLot) notifyObserver() {
-	p.observer.notify()
-
-}

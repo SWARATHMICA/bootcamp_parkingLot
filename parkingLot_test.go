@@ -91,14 +91,6 @@ func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 
 }
 
-type mockObserver struct {
-	notifiedTimes int
-}
-
-func (m *mockObserver) notify() {
-	m.notifiedTimes++
-}
-
 func TestCheckIfParkingLotIsFull(t *testing.T) {
 	car1 := &Car{
 		numberPlate: "KK-09-AK-1234",
@@ -116,19 +108,6 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 
 }
 
-func TestObserverShouldbenotifiedTwiceWhenParkingFull(t *testing.T) {
-	m := mockObserver{}
-	p, _ := NewParkingLot(1)
-	p.setObserver(&m)
-	car1 := &Car{
-		numberPlate: "KK-09-AK-1234",
-	}
-	p.Park(*car1)
-	if m.notifiedTimes != 2 {
-		t.Errorf("mock observer should have been notified twice only")
-	}
-
-}
 func TestUnparkCar(t *testing.T) {
 	p, _ := NewParkingLot(1)
 	car := &Car{
@@ -191,5 +170,21 @@ func TestOwnerStruct(t *testing.T) {
 	o := Owner{Name: "abc"}
 	if o.Name != "abc" {
 		t.Error("Owner struct not created")
+	}
+}
+
+type dummyObserver struct{}
+
+func (d *dummyObserver) notifyFull()      {}
+func (d *dummyObserver) notifyAvailable() {}
+
+func TestSetObserver(t *testing.T) {
+	lot, _ := NewParkingLot(1)
+	observer := &dummyObserver{}
+
+	lot.setObserver(observer)
+
+	if lot.observer != observer {
+		t.Error("Observer was not set correctly in the parking lot")
 	}
 }
