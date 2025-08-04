@@ -173,11 +173,11 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 }
 
 type checkObserver struct {
-	Called bool
+	status ParkingStatus
 }
 
-func (s *checkObserver) notify(message string) {
-	s.Called = true
+func (s *checkObserver) notify(status ParkingStatus) {
+	s.status = status
 }
 
 func TestSetObserver(t *testing.T) {
@@ -197,8 +197,8 @@ func TestCheckNotifyCalledOnObserver(t *testing.T) {
 	p.setObserver(s)
 	car := Car{numberPlate: "MH10AA12234"}
 	p.Park(car)
-
-	if !s.Called {
+	expectedStatus := PARKING_FULL
+	if s.status != expectedStatus {
 		t.Errorf("Notify not called")
 	}
 }

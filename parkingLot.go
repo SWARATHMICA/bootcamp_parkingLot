@@ -5,7 +5,7 @@ import (
 )
 
 type observer interface {
-	notify(message string)
+	notify(status ParkingStatus)
 }
 
 type slot struct {
@@ -28,6 +28,14 @@ func (p *ParkingLot) setObserver(observer observer) {
 type Car struct {
 	numberPlate string
 }
+
+type ParkingStatus int
+
+const (
+	UNKNOWN_STATUS ParkingStatus = iota
+	PARKING_FULL
+	PARKING_AVAILABLE
+)
 
 func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
@@ -56,7 +64,7 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 			p.slots[i].occupied = true
 			if i == p.capacity-1 {
 				p.isFull = true
-				p.notifyObserver()
+				p.notifyObserver(PARKING_FULL)
 			}
 			return true, nil
 
@@ -73,7 +81,7 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 			p.slots[i].occupied = false
 			if p.isFull {
 				p.isFull = false
-				p.notifyObserver()
+				p.notifyObserver(PARKING_AVAILABLE)
 			}
 			return true, nil
 		}
@@ -90,11 +98,6 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (p *ParkingLot) notifyObserver() {
-
-	message := "Parking lot available"
-	if p.isFull {
-		message = "Parking lot is full"
-	}
-	p.observer.notify(message)
+func (p *ParkingLot) notifyObserver(status ParkingStatus) {
+	p.observer.notify(status)
 }
