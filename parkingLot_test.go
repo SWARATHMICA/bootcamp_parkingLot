@@ -165,14 +165,9 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 
 }
 
-type dummyObserver struct{}
-
-func (d *dummyObserver) notifyFull()      {}
-func (d *dummyObserver) notifyAvailable() {}
-
 func TestSetObserver(t *testing.T) {
 	lot, _ := NewParkingLot(1)
-	observer := &dummyObserver{}
+	observer := &checkObserver{}
 
 	lot.setObserver(observer)
 
