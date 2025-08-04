@@ -2,7 +2,9 @@ package parkinglot
 
 import (
 	"errors"
+	"fmt"
 )
+
 type observer interface {
 	notifyFull()
 	notifyAvailable()
@@ -85,3 +87,10 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
+func (o Owner) notifyFull() {
+	fmt.Printf("Owner %s: Parking lot is FULL. Please put up the sign.\n", o.Name)
+}
+
+func (o Owner) notifyAvailable() {
+	fmt.Printf("Owner %s: Parking lot has space again. Please remove the sign.\n", o.Name)
+}

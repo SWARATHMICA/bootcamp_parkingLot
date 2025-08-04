@@ -188,3 +188,29 @@ func TestSetObserver(t *testing.T) {
 		t.Error("Observer was not set correctly in the parking lot")
 	}
 }
+
+type checkObserver struct {
+	fullCalled      bool
+	availableCalled bool
+}
+
+func (s *checkObserver) notifyFull() {
+	s.fullCalled = true
+}
+
+func (s *checkObserver) notifyAvailable() {
+	s.availableCalled = true
+}
+
+func TestObserverMethodsCalled(t *testing.T) {
+	s := &checkObserver{}
+	s.notifyFull()
+	s.notifyAvailable()
+
+	if !s.fullCalled {
+		t.Error("Expected notifyFull to be called")
+	}
+	if !s.availableCalled {
+		t.Error("Expected notifyAvailable to be called")
+	}
+}
