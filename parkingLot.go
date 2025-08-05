@@ -4,8 +4,8 @@ import (
 	"errors"
 )
 
-type observer interface {
-	notify(status ParkingStatus)
+type ParkingStatusReceiver interface {
+	receive(status ParkingStatus)
 }
 
 type slot struct {
@@ -17,12 +17,12 @@ type slot struct {
 type ParkingLot struct {
 	capacity int
 	slots    []slot
-	observer observer
+	receiver ParkingStatusReceiver
 	isFull   bool
 }
 
-func (p *ParkingLot) setObserver(observer observer) {
-	p.observer = observer
+func (p *ParkingLot) setReceiver(receiver ParkingStatusReceiver) {
+	p.receiver = receiver
 }
 
 type Car struct {
@@ -64,7 +64,7 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 			p.slots[i].occupied = true
 			if i == p.capacity-1 {
 				p.isFull = true
-				p.notifyObserver(PARKING_FULL)
+				p.notifyReceiver(PARKING_FULL)
 			}
 			return true, nil
 
@@ -81,7 +81,7 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 			p.slots[i].occupied = false
 			if p.isFull {
 				p.isFull = false
-				p.notifyObserver(PARKING_AVAILABLE)
+				p.notifyReceiver(PARKING_AVAILABLE)
 			}
 			return true, nil
 		}
@@ -98,6 +98,6 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (p *ParkingLot) notifyObserver(status ParkingStatus) {
-	p.observer.notify(status)
+func (p *ParkingLot) notifyReceiver(status ParkingStatus) {
+	p.receiver.receive(status)
 }

@@ -42,7 +42,7 @@ func TestParkCar(t *testing.T) {
 	car := Car{
 		numberPlate: "KJ-09-AK-123",
 	}
-	parkingLot.setObserver(&checkObserver{})
+	parkingLot.setReceiver(&mockReceiver{})
 	parked, _ := parkingLot.Park(car)
 	if !parked {
 		t.Errorf("Vehicle not parked")
@@ -77,7 +77,7 @@ func TestParkingLotCreationWithCapacity(t *testing.T) {
 
 func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 	p, _ := NewParkingLot(1)
-	p.setObserver(&checkObserver{})
+	p.setReceiver(&mockReceiver{})
 	car1 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
@@ -101,7 +101,7 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 		numberPlate: "KK-09-AK-2341",
 	}
 	p, _ := NewParkingLot(1)
-	p.setObserver(&checkObserver{})
+	p.setReceiver(&mockReceiver{})
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 
@@ -116,7 +116,7 @@ func TestUnparkCar(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
-	p.setObserver(&checkObserver{})
+	p.setReceiver(&mockReceiver{})
 	p.Park(*car)
 
 	result, _ := p.Unpark(*car)
@@ -131,7 +131,7 @@ func TestUnparkCarNotFound(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
-	p.setObserver(&checkObserver{})
+	p.setReceiver(&mockReceiver{})
 	p.Park(*car)
 
 	_, err := p.Unpark(*car)
@@ -145,7 +145,7 @@ func TestCarIsParked(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
-	p.setObserver(&checkObserver{})
+	p.setReceiver(&mockReceiver{})
 	p.Park(*car)
 
 	result := p.IsParked(*car)
@@ -163,7 +163,7 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 	car2 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
-	p.setObserver(&checkObserver{})
+	p.setReceiver(&mockReceiver{})
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 	if err == nil {
@@ -172,29 +172,29 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 
 }
 
-type checkObserver struct {
+type mockReceiver struct {
 	status ParkingStatus
 }
 
-func (s *checkObserver) notify(status ParkingStatus) {
+func (s *mockReceiver) receive(status ParkingStatus) {
 	s.status = status
 }
 
-func TestSetObserver(t *testing.T) {
+func TestSetReceiver(t *testing.T) {
 	lot, _ := NewParkingLot(1)
-	observer := &checkObserver{}
+	receiver := &mockReceiver{}
 
-	lot.setObserver(observer)
+	lot.setReceiver(receiver)
 
-	if lot.observer != observer {
-		t.Error("Observer was not set correctly in the parking lot")
+	if lot.receiver != receiver {
+		t.Error("receiver was not set correctly in the parking lot")
 	}
 }
 
-func TestCheckNotifyCalledOnObserver(t *testing.T) {
-	s := &checkObserver{}
+func TestCheckNotifyCalledOnReceiver(t *testing.T) {
+	s := &mockReceiver{}
 	p, _ := NewParkingLot(1)
-	p.setObserver(s)
+	p.setReceiver(s)
 	car := Car{numberPlate: "MH10AA12234"}
 	p.Park(car)
 	expectedStatus := PARKING_FULL
