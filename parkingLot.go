@@ -32,6 +32,7 @@ type Car struct {
 type ParkingStatus int
 
 const (
+	//TODO: connvert to mixed case acc to golang convention
 	UNKNOWN_STATUS ParkingStatus = iota
 	PARKING_FULL
 	PARKING_AVAILABLE
