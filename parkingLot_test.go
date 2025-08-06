@@ -42,7 +42,6 @@ func TestParkCar(t *testing.T) {
 	car := Car{
 		numberPlate: "KJ-09-AK-123",
 	}
-	parkingLot.setReceiver(&mockReceiver{})
 	parked, _ := parkingLot.Park(car)
 	if !parked {
 		t.Errorf("Vehicle not parked")
@@ -77,7 +76,6 @@ func TestParkingLotCreationWithCapacity(t *testing.T) {
 
 func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 	p, _ := NewParkingLot(1)
-	p.setReceiver(&mockReceiver{})
 	car1 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
@@ -101,7 +99,6 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 		numberPlate: "KK-09-AK-2341",
 	}
 	p, _ := NewParkingLot(1)
-	p.setReceiver(&mockReceiver{})
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 
@@ -116,7 +113,6 @@ func TestUnparkCar(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
-	p.setReceiver(&mockReceiver{})
 	p.Park(*car)
 
 	result, _ := p.Unpark(*car)
@@ -131,7 +127,6 @@ func TestUnparkCarNotFound(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
-	p.setReceiver(&mockReceiver{})
 	p.Park(*car)
 
 	_, err := p.Unpark(*car)
@@ -145,7 +140,6 @@ func TestCarIsParked(t *testing.T) {
 	car := &Car{
 		numberPlate: "KK-09-AK-2341",
 	}
-	p.setReceiver(&mockReceiver{})
 	p.Park(*car)
 
 	result := p.IsParked(*car)
@@ -163,7 +157,6 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 	car2 := &Car{
 		numberPlate: "KK-09-AK-1234",
 	}
-	p.setReceiver(&mockReceiver{})
 	p.Park((*car1))
 	_, err := p.Park(*car2)
 	if err == nil {
@@ -172,33 +165,123 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 
 }
 
-type mockReceiver struct {
+type mockParkingFullReceiver struct {
 	status ParkingStatus
 }
 
-func (s *mockReceiver) receive(status ParkingStatus) {
-	s.status = status
+func (s *mockParkingFullReceiver) receiveFull() {
+	s.status = PARKING_FULL
 }
 
-func TestSetReceiver(t *testing.T) {
-	lot, _ := NewParkingLot(1)
-	receiver := &mockReceiver{}
+var car = Car{numberPlate: "xts"}
 
-	lot.setReceiver(receiver)
-
-	if lot.receiver != receiver {
-		t.Error("receiver was not set correctly in the parking lot")
-	}
-}
-
+// TODO fix name
 func TestCheckNotifyCalledOnReceiver(t *testing.T) {
-	s := &mockReceiver{}
+	s := &mockParkingFullReceiver{}
 	p, _ := NewParkingLot(1)
 	p.setReceiver(s)
-	car := Car{numberPlate: "MH10AA12234"}
 	p.Park(car)
 	expectedStatus := PARKING_FULL
 	if s.status != expectedStatus {
 		t.Errorf("Notify not called")
 	}
+}
+func TestMultipleReiversShouldBeNotifiedWhenParkingFull(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	s := &mockParkingFullReceiver{}
+	another := &mockParkingFullReceiver{}
+
+	p.addParkingFullReceiver(s)
+	p.addParkingFullReceiver(another)
+	p.Park(car)
+
+	expectedStatus := PARKING_FULL
+
+	if s.status != expectedStatus {
+		t.Errorf("The status should be changed to parking_full")
+	}
+	if another.status != expectedStatus {
+		t.Errorf("Another person should have status parking_full")
+	}
+
+}
+
+type mockParkingAvailableReceiver struct {
+	receiveCalled bool
+}
+
+func (m *mockParkingAvailableReceiver) receiveAvailable() {
+	m.receiveCalled = !m.receiveCalled
+}
+
+func TestSingleRecieverNotifiedParkingAvailable(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	parkingAvailableReceiver := mockParkingAvailableReceiver{}
+	p.setParkingAvailableReceiver(&parkingAvailableReceiver)
+	p.Park(car)
+	p.Unpark(car)
+
+	if !parkingAvailableReceiver.receiveCalled {
+		t.Errorf("Receive Function not called")
+	}
+}
+
+func TestCannotNofifyMultiplePeopleWhenParkingAvailable(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	parkingFullReceiver := mockParkingFullReceiver{}
+	parkingAvailableReceiver := mockParkingAvailableReceiver{}
+
+	p.addParkingFullReceiver(&parkingFullReceiver)
+
+	p.setParkingAvailableReceiver(&parkingAvailableReceiver)
+
+	p.Park(car)
+	if parkingFullReceiver.status != PARKING_FULL {
+		t.Errorf("Only one person should be notified for parking availability")
+	}
+	if parkingAvailableReceiver.receiveCalled == true {
+		t.Errorf("Parking Available Receiver should not be notified when parking full")
+	}
+
+	p.Unpark(car)
+	if parkingFullReceiver.status != PARKING_FULL {
+		t.Errorf("Only one person should be notified for parking availability")
+	}
+
+	if !parkingAvailableReceiver.receiveCalled {
+		t.Errorf("This receiver has to be Notified when parking is available")
+	}
+
+}
+
+type owner struct {
+	notifiedFull      bool
+	notifiedAvailable bool
+}
+
+func (o *owner) receiveFull() {
+	o.notifiedFull = true
+}
+
+func (o *owner) receiveAvailable() {
+	o.notifiedAvailable = true
+}
+
+func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
+	p, _ := NewParkingLot(1)
+	owner := owner{}
+	p.setParkingAvailableReceiver(&owner)
+	p.addParkingFullReceiver(&owner)
+	p.Park(car)
+
+	if owner.notifiedFull != true {
+		t.Errorf("owner should be notified when the parking lot gets full")
+	}
+
+	p.Unpark(car)
+
+	if owner.notifiedAvailable != true {
+		t.Errorf("owner should be notified when the parking lot is available")
+	}
+
 }

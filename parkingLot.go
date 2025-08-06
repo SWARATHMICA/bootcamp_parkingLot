@@ -4,8 +4,12 @@ import (
 	"errors"
 )
 
-type ParkingStatusReceiver interface {
-	receive(status ParkingStatus)
+type ParkingFullReceiver interface {
+	receiveFull()
+}
+
+type ParkingAvailableReceiver interface {
+	receiveAvailable()
 }
 
 type slot struct {
@@ -15,14 +19,23 @@ type slot struct {
 }
 
 type ParkingLot struct {
-	capacity int
-	slots    []slot
-	receiver ParkingStatusReceiver
-	isFull   bool
+	capacity          int
+	slots             []slot
+	receiver          []ParkingFullReceiver
+	availableReceiver ParkingAvailableReceiver
+	isFull            bool
 }
 
-func (p *ParkingLot) setReceiver(receiver ParkingStatusReceiver) {
-	p.receiver = receiver
+func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
+	p.availableReceiver = parkingAvailableReceiver
+}
+
+func (p *ParkingLot) addParkingFullReceiver(r ParkingFullReceiver) {
+	p.receiver = append(p.receiver, r)
+}
+
+func (p *ParkingLot) setReceiver(receiver ParkingFullReceiver) {
+	p.receiver = append(p.receiver, receiver)
 }
 
 type Car struct {
@@ -65,7 +78,11 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 			p.slots[i].occupied = true
 			if i == p.capacity-1 {
 				p.isFull = true
-				p.notifyReceiver(PARKING_FULL)
+				if p.receiver != nil {
+					p.notifyReceiver()
+
+				}
+
 			}
 			return true, nil
 
@@ -82,7 +99,10 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 			p.slots[i].occupied = false
 			if p.isFull {
 				p.isFull = false
-				p.notifyReceiver(PARKING_AVAILABLE)
+				if p.availableReceiver != nil {
+					p.availableReceiver.receiveAvailable()
+				}
+
 			}
 			return true, nil
 		}
@@ -99,6 +119,9 @@ func (p *ParkingLot) IsParked(car Car) bool {
 	return false
 }
 
-func (p *ParkingLot) notifyReceiver(status ParkingStatus) {
-	p.receiver.receive(status)
+func (p *ParkingLot) notifyReceiver() {
+	for _, r := range p.receiver {
+		r.receiveFull()
+	}
+
 }
