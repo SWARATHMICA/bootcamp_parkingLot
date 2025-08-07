@@ -134,21 +134,22 @@ func (p *ParkingLot) notifyReceiver() {
 
 }
 
-func (a *Attendant) FindAndPark(car Car) (bool, error) {
+func (a *Attendant) FindAndPark(car Car) bool {
 	for _, p := range a.Parkinglots {
 		if !p.isFull {
-			return p.Park(car)
+			result, _ := p.Park(car)
+			return result
 		}
 	}
-	return false, errors.New("no parkinglot is available")
+	return false
 }
 
-func (a *Attendant) FindAndUnPark(car Car) (bool, error) {
+func (a *Attendant) FindAndUnPark(car Car) bool {
 	for _, p := range a.Parkinglots {
 		result, _ := p.Unpark(car)
 		if result {
-			return true, nil
+			return true
 		}
 	}
-	return false, errors.New("car is not found ")
+	return false
 }

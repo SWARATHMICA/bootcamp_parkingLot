@@ -319,7 +319,7 @@ func TestFindAndPark(t *testing.T) {
 	attendent.addParkingLotInAttendent(parkinglot)
 	attendent.addParkingLotInAttendent(anotherParkinglot)
 
-	result, _ := attendent.FindAndPark(Car{"KK10AA1234"})
+	result := attendent.FindAndPark(Car{"KK10AA1234"})
 
 	if !result {
 		t.Errorf("car should be parked in anotherParkinglot")
@@ -340,7 +340,7 @@ func TestFindAndUnPark(t *testing.T) {
 	attendent.addParkingLotInAttendent(parkinglot)
 	attendent.addParkingLotInAttendent(anotherParkinglot)
 
-	result, _ := attendent.FindAndUnPark(car)
+	result := attendent.FindAndUnPark(car)
 
 	if !result {
 		t.Errorf("car should be found in anotherParkinglot")
