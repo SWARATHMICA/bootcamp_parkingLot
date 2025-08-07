@@ -347,3 +347,20 @@ func TestFindAndUnPark(t *testing.T) {
 	}
 
 }
+
+func (a *Attendant) receiveFull() {
+	fmt.Println("Receive full called!")
+}
+func TestAttendGetsNotifiedWhenFull(t *testing.T) {
+	parkinglot, _ := NewParkingLot(1)
+	attendent := Attendant{}
+	parkinglot.addParkingFullReceiver(&attendent)
+	attendent.addParkingLotInAttendent(parkinglot)
+
+	result := attendent.FindAndPark(car)
+
+	if !result {
+		t.Errorf("car should be found in anotherParkinglot")
+	}
+
+}
