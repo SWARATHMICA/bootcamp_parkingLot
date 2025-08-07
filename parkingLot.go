@@ -13,7 +13,7 @@ type ParkingAvailableReceiver interface {
 }
 
 type Attendent struct {
-	Parkinglot *ParkingLot
+	Parkinglots []*ParkingLot
 }
 
 type slot struct {
@@ -30,8 +30,8 @@ type ParkingLot struct {
 	isFull            bool
 }
 
-func NewAttendent(p *ParkingLot) *Attendent {
-	return &Attendent{Parkinglot: p}
+func (a *Attendent) addParkingLotInAttendent(p *ParkingLot) {
+	a.Parkinglots = append(a.Parkinglots, p)
 }
 
 func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
