@@ -133,3 +133,12 @@ func (p *ParkingLot) notifyReceiver() {
 	}
 
 }
+
+func (a *Attendent) FindAndPark(car Car) (bool, error) {
+	for _, p := range a.Parkinglots {
+		if !p.isFull {
+			return p.Park(car)
+		}
+	}
+	return false, errors.New("no parkinglot is available")
+}

@@ -310,3 +310,24 @@ func TestUnParkCarWithAttendent(t *testing.T) {
 		t.Errorf("parking lot should  not be full when unparked through attendent")
 	}
 }
+
+func TestFindAndPark(t *testing.T) {
+	parkinglot, _ := NewParkingLot(1)
+	anotherParkinglot, _ := NewParkingLot(1)
+	parkinglot.Park(car)
+	attendent := Attendent{}
+	attendent.addParkingLotInAttendent(parkinglot)
+	attendent.addParkingLotInAttendent(anotherParkinglot)
+
+	result, _ := attendent.FindAndPark(Car{"KK10AA1234"})
+
+	if !result {
+		t.Errorf("car should be parked in anotherParkinglot")
+	}
+
+	if !anotherParkinglot.isFull {
+		t.Errorf("car should be parked in anotherParkinglot")
+
+	}
+
+}
