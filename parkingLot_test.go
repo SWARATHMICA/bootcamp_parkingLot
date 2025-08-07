@@ -254,22 +254,22 @@ func TestCannotNofifyMultiplePeopleWhenParkingAvailable(t *testing.T) {
 
 }
 
-type owner struct {
+type ReceiveBothNotification struct {
 	notifiedFull      bool
 	notifiedAvailable bool
 }
 
-func (o *owner) receiveFull() {
+func (o *ReceiveBothNotification) receiveFull() {
 	o.notifiedFull = true
 }
 
-func (o *owner) receiveAvailable() {
+func (o *ReceiveBothNotification) receiveAvailable() {
 	o.notifiedAvailable = true
 }
 
 func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
 	p, _ := NewParkingLot(1)
-	owner := owner{}
+	owner := ReceiveBothNotification{}
 	p.setParkingAvailableReceiver(&owner)
 	p.addParkingFullReceiver(&owner)
 	p.Park(car)
