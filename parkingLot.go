@@ -12,7 +12,7 @@ type ParkingAvailableReceiver interface {
 	receiveAvailable()
 }
 
-type Attendent struct {
+type Attendant struct {
 	Parkinglots []*ParkingLot
 }
 
@@ -25,12 +25,12 @@ type slot struct {
 type ParkingLot struct {
 	capacity          int
 	slots             []slot
-	receiver          []ParkingFullReceiver
+	fullReceiver      []ParkingFullReceiver
 	availableReceiver ParkingAvailableReceiver
 	isFull            bool
 }
 
-func (a *Attendent) addParkingLotInAttendent(p *ParkingLot) {
+func (a *Attendant) addParkingLotInAttendent(p *ParkingLot) {
 	a.Parkinglots = append(a.Parkinglots, p)
 }
 
@@ -39,11 +39,11 @@ func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver Parkin
 }
 
 func (p *ParkingLot) addParkingFullReceiver(r ParkingFullReceiver) {
-	p.receiver = append(p.receiver, r)
+	p.fullReceiver = append(p.fullReceiver, r)
 }
 
 func (p *ParkingLot) setReceiver(receiver ParkingFullReceiver) {
-	p.receiver = append(p.receiver, receiver)
+	p.fullReceiver = append(p.fullReceiver, receiver)
 }
 
 type Car struct {
@@ -86,7 +86,7 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 			p.slots[i].occupied = true
 			if i == p.capacity-1 {
 				p.isFull = true
-				if p.receiver != nil {
+				if p.fullReceiver != nil {
 					p.notifyReceiver()
 
 				}
@@ -128,13 +128,13 @@ func (p *ParkingLot) IsParked(car Car) bool {
 }
 
 func (p *ParkingLot) notifyReceiver() {
-	for _, r := range p.receiver {
+	for _, r := range p.fullReceiver {
 		r.receiveFull()
 	}
 
 }
 
-func (a *Attendent) FindAndPark(car Car) (bool, error) {
+func (a *Attendant) FindAndPark(car Car) (bool, error) {
 	for _, p := range a.Parkinglots {
 		if !p.isFull {
 			return p.Park(car)
@@ -143,7 +143,7 @@ func (a *Attendent) FindAndPark(car Car) (bool, error) {
 	return false, errors.New("no parkinglot is available")
 }
 
-func (a *Attendent) FindAndUnPark(car Car) (bool, error) {
+func (a *Attendant) FindAndUnPark(car Car) (bool, error) {
 	for _, p := range a.Parkinglots {
 		result, _ := p.Unpark(car)
 		if result {
