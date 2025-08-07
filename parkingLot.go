@@ -12,6 +12,10 @@ type ParkingAvailableReceiver interface {
 	receiveAvailable()
 }
 
+type Attendent struct {
+	Parkinglot *ParkingLot
+}
+
 type slot struct {
 	id          int
 	numberPlate string
@@ -24,6 +28,10 @@ type ParkingLot struct {
 	receiver          []ParkingFullReceiver
 	availableReceiver ParkingAvailableReceiver
 	isFull            bool
+}
+
+func NewAttendent(p *ParkingLot) *Attendent {
+	return &Attendent{Parkinglot: p}
 }
 
 func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
