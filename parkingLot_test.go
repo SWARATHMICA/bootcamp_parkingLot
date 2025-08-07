@@ -331,3 +331,19 @@ func TestFindAndPark(t *testing.T) {
 	}
 
 }
+
+func TestFindAndUnPark(t *testing.T) {
+	parkinglot, _ := NewParkingLot(1)
+	anotherParkinglot, _ := NewParkingLot(1)
+	anotherParkinglot.Park(car)
+	attendent := Attendent{}
+	attendent.addParkingLotInAttendent(parkinglot)
+	attendent.addParkingLotInAttendent(anotherParkinglot)
+
+	result, _ := attendent.FindAndUnPark(car)
+
+	if !result {
+		t.Errorf("car should be found in anotherParkinglot")
+	}
+
+}

@@ -142,3 +142,13 @@ func (a *Attendent) FindAndPark(car Car) (bool, error) {
 	}
 	return false, errors.New("no parkinglot is available")
 }
+
+func (a *Attendent) FindAndUnPark(car Car) (bool, error) {
+	for _, p := range a.Parkinglots {
+		result, _ := p.Unpark(car)
+		if result {
+			return true, nil
+		}
+	}
+	return false, errors.New("car is not found ")
+}
