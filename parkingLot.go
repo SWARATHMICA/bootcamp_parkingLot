@@ -47,6 +47,10 @@ type Car struct {
 	numberPlate string
 }
 
+func (car1 Car) isEqual(car2 Car) bool {
+	return car1.numberPlate == car2.numberPlate
+}
+
 type ParkingStatus int
 
 const (

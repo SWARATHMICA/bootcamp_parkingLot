@@ -321,3 +321,12 @@ func TestAttendantReceiveFullNotification(t *testing.T) {
 		t.Errorf("attendant should be notified about parking full")
 	}
 }
+
+func TestCarEquals(t *testing.T) {
+	result := car.isEqual(car)
+
+	if !result {
+		t.Errorf("car should be equal to itself")
+	}
+
+}
