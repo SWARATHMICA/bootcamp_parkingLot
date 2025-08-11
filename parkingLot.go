@@ -13,7 +13,7 @@ type ParkingAvailableReceiver interface {
 }
 
 type Attendant struct {
-	Parkinglot ParkingLot
+	Parkinglot *ParkingLot
 }
 
 type slot struct {
@@ -31,7 +31,7 @@ type ParkingLot struct {
 }
 
 func (a *Attendant) addParkingLotInAttendent(p *ParkingLot) {
-	a.Parkinglot = *p
+	a.Parkinglot = p
 }
 
 func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
