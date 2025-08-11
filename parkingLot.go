@@ -43,10 +43,6 @@ func (p *ParkingLot) addParkingFullReceiver(r ParkingFullReceiver) {
 	p.fullReceiver = append(p.fullReceiver, r)
 }
 
-func (p *ParkingLot) setReceiver(receiver ParkingFullReceiver) {
-	p.fullReceiver = append(p.fullReceiver, receiver)
-}
-
 type Car struct {
 	numberPlate string
 }

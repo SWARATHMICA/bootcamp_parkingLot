@@ -175,18 +175,7 @@ func (s *mockParkingFullReceiver) receiveFull() {
 
 var car = Car{numberPlate: "xts"}
 
-// TODO fix name
-func TestCheckNotifyCalledOnReceiver(t *testing.T) {
-	s := &mockParkingFullReceiver{}
-	p, _ := NewParkingLot(1)
-	p.setReceiver(s)
-	p.park(car)
-	expectedStatus := PARKING_FULL
-	if s.status != expectedStatus {
-		t.Errorf("Notify not called")
-	}
-}
-func TestMultipleReiversShouldBeNotifiedWhenParkingFull(t *testing.T) {
+func TestMultipleReceiversShouldBeNotifiedWhenParkingFull(t *testing.T) {
 	p, _ := NewParkingLot(1)
 	s := &mockParkingFullReceiver{}
 	another := &mockParkingFullReceiver{}
