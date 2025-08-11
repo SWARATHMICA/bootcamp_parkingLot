@@ -310,17 +310,25 @@ func TestUnParkCarWithAttendent(t *testing.T) {
 	}
 }
 
+func TestNewAttendantShouldNotCreateWithNilValue(t *testing.T) {
+
+	_, err := NewAttendant(nil)
+
+	expectedError := "cannot create attedant with nil parkinglot"
+
+	if err.Error() != expectedError {
+		t.Errorf("attendant should be notified about parking full")
+	}
+
+}
+
 func TestAttendantReceiveFullNotification(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendant := Attendant{}
-	parkingLot.addParkingFullReceiver(&attendant)
-	attendant.addParkingLotInAttendent(parkingLot)
+	attendant, _ := NewAttendant(parkingLot)
 
 	attendant.ParkWithAttendant(car)
-	attendant.ParkWithAttendant(Car{"KK10AA1233"})
 
 	if !attendant.notified {
 		t.Errorf("attendant should be notified about parking full")
 	}
-
 }

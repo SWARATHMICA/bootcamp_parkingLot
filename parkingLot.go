@@ -146,3 +146,17 @@ func (a *Attendant) UnParkWithAttendant(car Car) (bool, error) {
 func (a *Attendant) receiveFull() {
 	a.notified = true
 }
+
+func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
+
+	if parkingLot == nil {
+		return nil, errors.New("cannot create attedant with nil parkinglot")
+	}
+	a := Attendant{
+		Parkinglot: parkingLot,
+		notified:   false,
+	}
+	parkingLot.addParkingFullReceiver(&a)
+
+	return &a, nil
+}
