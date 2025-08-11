@@ -76,8 +76,8 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{slots: lots, capacity: capacity}, nil
 }
 
-func (p *ParkingLot) Park(c Car) (bool, error) {
-	if p.IsParked(c) {
+func (p *ParkingLot) park(c Car) (bool, error) {
+	if p.isParked(c) {
 		return false, errors.New("Car already parked")
 	}
 	for i := 0; i < p.capacity; i++ {
@@ -100,9 +100,9 @@ func (p *ParkingLot) Park(c Car) (bool, error) {
 
 }
 
-func (p *ParkingLot) Unpark(car Car) (bool, error) {
+func (p *ParkingLot) unPark(car Car) (bool, error) {
 	for i := 0; i < p.capacity; i++ {
-		if p.IsParked(car) {
+		if p.isParked(car) {
 			p.slots[i].numberPlate = ""
 			p.slots[i].occupied = false
 			if p.isFull {
@@ -118,7 +118,7 @@ func (p *ParkingLot) Unpark(car Car) (bool, error) {
 	return false, errors.New("Car is not found in the parking lot")
 }
 
-func (p *ParkingLot) IsParked(car Car) bool {
+func (p *ParkingLot) isParked(car Car) bool {
 	for _, slot := range p.slots {
 		if slot.occupied && slot.numberPlate == car.numberPlate {
 			return true
@@ -135,9 +135,9 @@ func (p *ParkingLot) notifyReceiver() {
 }
 
 func (a *Attendant) ParkWithAttendant(car Car) (bool, error) {
-	return a.Parkinglot.Park(car)
+	return a.Parkinglot.park(car)
 }
 
 func (a *Attendant) UnParkWithAttendant(car Car) (bool, error) {
-	return a.Parkinglot.Unpark(car)
+	return a.Parkinglot.unPark(car)
 }
