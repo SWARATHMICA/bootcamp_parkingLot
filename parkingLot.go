@@ -13,7 +13,7 @@ type ParkingAvailableReceiver interface {
 }
 
 type Attendant struct {
-	Parkinglots []*ParkingLot
+	Parkinglot ParkingLot
 }
 
 type slot struct {
@@ -31,7 +31,7 @@ type ParkingLot struct {
 }
 
 func (a *Attendant) addParkingLotInAttendent(p *ParkingLot) {
-	a.Parkinglots = append(a.Parkinglots, p)
+	a.Parkinglot = *p
 }
 
 func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
@@ -134,22 +134,10 @@ func (p *ParkingLot) notifyReceiver() {
 
 }
 
-func (a *Attendant) FindAndPark(car Car) bool {
-	for _, p := range a.Parkinglots {
-		if !p.isFull {
-			result, _ := p.Park(car)
-			return result
-		}
-	}
-	return false
+func (a *Attendant) ParkWithAttendant(car Car) (bool, error) {
+	return a.Parkinglot.Park(car)
 }
 
-func (a *Attendant) FindAndUnPark(car Car) bool {
-	for _, p := range a.Parkinglots {
-		result, _ := p.Unpark(car)
-		if result {
-			return true
-		}
-	}
-	return false
+func (a *Attendant) UnParkWithAttendant(car Car) (bool, error) {
+	return a.Parkinglot.Unpark(car)
 }

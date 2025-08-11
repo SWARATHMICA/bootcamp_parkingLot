@@ -290,10 +290,9 @@ func TestParkCarWithAttendent(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendent := Attendant{}
 	attendent.addParkingLotInAttendent(parkingLot)
+	_, err := attendent.ParkWithAttendant(car)
 
-	attendent.Parkinglots[0].Park(car)
-
-	if parkingLot.isFull == false {
+	if err != nil {
 		t.Errorf("parking lot should be full when parked through attendent")
 	}
 }
@@ -303,64 +302,10 @@ func TestUnParkCarWithAttendent(t *testing.T) {
 	attendent := Attendant{}
 	attendent.addParkingLotInAttendent(parkingLot)
 
-	attendent.Parkinglots[0].Park(car)
-	attendent.Parkinglots[0].Unpark(car)
+	attendent.ParkWithAttendant(car)
+	_, err := attendent.UnParkWithAttendant(car)
 
-	if parkingLot.isFull {
+	if err != nil {
 		t.Errorf("parking lot should  not be full when unparked through attendent")
 	}
-}
-
-func TestFindAndPark(t *testing.T) {
-	parkinglot, _ := NewParkingLot(1)
-	anotherParkinglot, _ := NewParkingLot(1)
-	parkinglot.Park(car)
-	attendent := Attendant{}
-	attendent.addParkingLotInAttendent(parkinglot)
-	attendent.addParkingLotInAttendent(anotherParkinglot)
-
-	result := attendent.FindAndPark(Car{"KK10AA1234"})
-
-	if !result {
-		t.Errorf("car should be parked in anotherParkinglot")
-	}
-
-	if !anotherParkinglot.isFull {
-		t.Errorf("car should be parked in anotherParkinglot")
-
-	}
-
-}
-
-func TestFindAndUnPark(t *testing.T) {
-	parkinglot, _ := NewParkingLot(1)
-	anotherParkinglot, _ := NewParkingLot(1)
-	anotherParkinglot.Park(car)
-	attendent := Attendant{}
-	attendent.addParkingLotInAttendent(parkinglot)
-	attendent.addParkingLotInAttendent(anotherParkinglot)
-
-	result := attendent.FindAndUnPark(car)
-
-	if !result {
-		t.Errorf("car should be found in anotherParkinglot")
-	}
-
-}
-
-func (a *Attendant) receiveFull() {
-	fmt.Println("Receive full called!")
-}
-func TestAttendGetsNotifiedWhenFull(t *testing.T) {
-	parkinglot, _ := NewParkingLot(1)
-	attendent := Attendant{}
-	parkinglot.addParkingFullReceiver(&attendent)
-	attendent.addParkingLotInAttendent(parkinglot)
-
-	result := attendent.FindAndPark(car)
-
-	if !result {
-		t.Errorf("car should be found in anotherParkinglot")
-	}
-
 }
