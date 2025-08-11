@@ -309,3 +309,18 @@ func TestUnParkCarWithAttendent(t *testing.T) {
 		t.Errorf("parking lot should  not be full when unparked through attendent")
 	}
 }
+
+func TestAttendantReceiveFullNotification(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+	attendant := Attendant{}
+	parkingLot.addParkingFullReceiver(&attendant)
+	attendant.addParkingLotInAttendent(parkingLot)
+
+	attendant.ParkWithAttendant(car)
+	attendant.ParkWithAttendant(Car{"KK10AA1233"})
+
+	if !attendant.notified {
+		t.Errorf("attendant should be notified about parking full")
+	}
+
+}

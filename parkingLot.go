@@ -14,6 +14,7 @@ type ParkingAvailableReceiver interface {
 
 type Attendant struct {
 	Parkinglot *ParkingLot
+	notified   bool
 }
 
 type slot struct {
@@ -140,4 +141,8 @@ func (a *Attendant) ParkWithAttendant(car Car) (bool, error) {
 
 func (a *Attendant) UnParkWithAttendant(car Car) (bool, error) {
 	return a.Parkinglot.unPark(car)
+}
+
+func (a *Attendant) receiveFull() {
+	a.notified = true
 }
