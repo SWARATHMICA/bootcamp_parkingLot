@@ -285,6 +285,24 @@ func TestParkCarWithAttendent(t *testing.T) {
 		t.Errorf("parking lot should be full when parked through attendent")
 	}
 }
+func TestAttendantParkAfterParkingAvailable(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+	attendent, _ := NewAttendant(parkingLot)
+
+	//park the car
+	attendent.ParkWithAttendant(&car)
+
+	//unpark the car
+	attendent.UnParkWithAttendant(&car)
+
+	//should be able to park again
+	_, err := attendent.ParkWithAttendant(&car)
+
+	if err != nil {
+		t.Error("should be able to park after parking become available")
+	}
+
+}
 
 func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)

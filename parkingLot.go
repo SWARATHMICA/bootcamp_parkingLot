@@ -143,7 +143,11 @@ func (a *Attendant) ParkWithAttendant(car *Car) (bool, error) {
 }
 
 func (a *Attendant) UnParkWithAttendant(car *Car) (bool, error) {
-	return a.Parkinglot.unPark(car)
+	result, err := a.Parkinglot.unPark(car)
+	if result {
+		a.parkingFull = false
+	}
+	return result, err
 }
 
 func (a *Attendant) receiveFull() {
