@@ -61,14 +61,6 @@ func (car1 Car) isEqual(car2 Car) bool {
 	return car1.numberPlate == car2.numberPlate
 }
 
-type ParkingStatus int
-
-const (
-	UnknownStatus ParkingStatus = iota
-	ParkingFull
-	ParkingAvailable
-)
-
 func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
 		return nil, errors.New("cannot create parking lot with capacity less than 1")
