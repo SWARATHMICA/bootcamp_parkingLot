@@ -350,11 +350,27 @@ func TestAttendantReceiveFullNotification(t *testing.T) {
 	}
 }
 
-func TestCarEquals(t *testing.T) {
-	result := car.isEqual(car)
+func TestTwoCarsEqual(t *testing.T) {
+	const carNumber = "MH12AA2345"
+	car1 := Car{carNumber}
+	car2 := Car{carNumber}
+
+	result := car1.isEqual(car2)
 
 	if !result {
-		t.Errorf("car should be equal to itself")
+		t.Errorf("car1 should be equal to car2")
+	}
+
+}
+
+func TestTwoCarsNotEqual(t *testing.T) {
+	car1 := Car{"MH12AA2345"}
+	car2 := Car{"UP12HH4009"}
+
+	result := car1.isEqual(car2)
+
+	if result {
+		t.Errorf("car1 should not be equal to car2")
 	}
 
 }
