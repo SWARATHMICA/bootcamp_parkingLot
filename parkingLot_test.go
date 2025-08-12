@@ -277,8 +277,8 @@ func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
 
 func TestParkCarWithAttendent(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendent := Attendant{}
-	attendent.addParkingLotInAttendent(parkingLot)
+	attendent, _ := NewAttendant(parkingLot)
+
 	_, err := attendent.ParkWithAttendant(&car)
 
 	if err != nil {
@@ -317,8 +317,7 @@ func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 
 func TestUnParkCarWithAttendent(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendent := Attendant{}
-	attendent.addParkingLotInAttendent(parkingLot)
+	attendent, _ := NewAttendant(parkingLot)
 
 	attendent.ParkWithAttendant(&car)
 	_, err := attendent.UnParkWithAttendant(&car)
