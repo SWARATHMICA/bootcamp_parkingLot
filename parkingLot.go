@@ -12,11 +12,6 @@ type ParkingAvailableReceiver interface {
 	receiveAvailable()
 }
 
-type Attendant struct {
-	Parkinglot  *ParkingLot
-	parkingFull bool
-}
-
 type slot struct {
 	id       int
 	car      *Car
@@ -156,18 +151,4 @@ func (a *Attendant) UnPark(car *Car) (bool, error) {
 
 func (a *Attendant) receiveFull() {
 	a.parkingFull = true
-}
-
-func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
-
-	if parkingLot == nil {
-		return nil, errors.New("cannot create attedant with nil parkinglot")
-	}
-	a := Attendant{
-		Parkinglot:  parkingLot,
-		parkingFull: false,
-	}
-	parkingLot.addParkingFullReceiver(&a)
-
-	return &a, nil
 }

@@ -331,18 +331,6 @@ func TestUnParkCarByAttendant(t *testing.T) {
 	}
 }
 
-func TestAttendantShouldNotBeCreateWithNilValue(t *testing.T) {
-
-	_, err := NewAttendant(nil)
-
-	expectedError := "cannot create attedant with nil parkinglot"
-
-	if err.Error() != expectedError {
-		t.Errorf("attendant should not be creatd with nil parking lot")
-	}
-
-}
-
 func TestAttendantReceiveFullNotification(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(parkingLot)
