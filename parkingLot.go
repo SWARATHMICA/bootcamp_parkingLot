@@ -54,10 +54,9 @@ func (car1 Car) isEqual(car2 Car) bool {
 type ParkingStatus int
 
 const (
-	//TODO: connvert to mixed case acc to golang convention
-	UNKNOWN_STATUS ParkingStatus = iota
-	PARKING_FULL
-	PARKING_AVAILABLE
+	UnknownStatus ParkingStatus = iota
+	ParkingFull
+	ParkingAvailable
 )
 
 func NewParkingLot(capacity int) (*ParkingLot, error) {

@@ -170,7 +170,7 @@ type mockParkingFullReceiver struct {
 }
 
 func (s *mockParkingFullReceiver) receiveFull() {
-	s.status = PARKING_FULL
+	s.status = ParkingFull
 }
 
 var car = Car{numberPlate: "xts"}
@@ -184,7 +184,7 @@ func TestMultipleReceiversShouldBeNotifiedWhenParkingFull(t *testing.T) {
 	p.addParkingFullReceiver(another)
 	p.park(&car)
 
-	expectedStatus := PARKING_FULL
+	expectedStatus := ParkingFull
 
 	if s.status != expectedStatus {
 		t.Errorf("The status should be changed to parking_full")
@@ -225,7 +225,7 @@ func TestCannotNofifyMultiplePeopleWhenParkingAvailable(t *testing.T) {
 	p.setParkingAvailableReceiver(&parkingAvailableReceiver)
 
 	p.park(&car)
-	if parkingFullReceiver.status != PARKING_FULL {
+	if parkingFullReceiver.status != ParkingFull {
 		t.Errorf("Only one person should be notified for parking availability")
 	}
 	if parkingAvailableReceiver.receiveCalled == true {
@@ -233,7 +233,7 @@ func TestCannotNofifyMultiplePeopleWhenParkingAvailable(t *testing.T) {
 	}
 
 	p.unPark(&car)
-	if parkingFullReceiver.status != PARKING_FULL {
+	if parkingFullReceiver.status != ParkingFull {
 		t.Errorf("Only one person should be notified for parking availability")
 	}
 
