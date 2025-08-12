@@ -330,3 +330,15 @@ func TestCarEquals(t *testing.T) {
 	}
 
 }
+
+func TestParkAfterUnpark(t *testing.T) {
+	parkinglot, _ := NewParkingLot(1)
+	parkinglot.park(car)
+	parkinglot.unPark(car)
+
+	_, err := parkinglot.park(car)
+
+	if err != nil {
+		t.Errorf("car should park after nupark")
+	}
+}
