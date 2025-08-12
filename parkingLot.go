@@ -133,14 +133,6 @@ func (p *ParkingLot) notifyReceiver() {
 
 }
 
-func (a *Attendant) Park(car *Car) (bool, error) {
-	if !a.parkingFull {
-		return a.Parkinglot.park(car)
-	}
-
-	return false, errors.New("parking lot is full, attendant cannot park the car")
-}
-
 func (a *Attendant) UnPark(car *Car) (bool, error) {
 	result, err := a.Parkinglot.unPark(car)
 	if result {

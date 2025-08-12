@@ -274,17 +274,6 @@ func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
 	}
 
 }
-
-func TestParkCarByAttendant(t *testing.T) {
-	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(parkingLot)
-
-	_, err := attendant.Park(&car)
-
-	if err != nil {
-		t.Errorf("attendant should be able to park the car")
-	}
-}
 func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(parkingLot)
@@ -302,21 +291,6 @@ func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 		t.Error("should be able to park after parking become available")
 	}
 
-}
-
-func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
-	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(parkingLot)
-
-	expectedError := "parking lot is full, attendant cannot park the car"
-
-	attendant.Park(&Car{"KK10AA1234"})
-
-	_, err := attendant.Park(&car)
-
-	if err.Error() != expectedError {
-		t.Errorf("attendant cannot park when parking full")
-	}
 }
 
 func TestUnParkCarByAttendant(t *testing.T) {

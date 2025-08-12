@@ -20,3 +20,11 @@ func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
 
 	return &a, nil
 }
+
+func (a *Attendant) Park(car *Car) (bool, error) {
+	if !a.parkingFull {
+		return a.Parkinglot.park(car)
+	}
+
+	return false, errors.New("parking lot is full, attendant cannot park the car")
+}
