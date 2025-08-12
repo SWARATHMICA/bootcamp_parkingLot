@@ -75,3 +75,14 @@ func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 	}
 
 }
+
+func TestAttendantReceiveFullNotification(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+	attendant, _ := NewAttendant(parkingLot)
+
+	attendant.Park(&car)
+
+	if !attendant.parkingFull {
+		t.Errorf("attendant should be notified about parking full")
+	}
+}

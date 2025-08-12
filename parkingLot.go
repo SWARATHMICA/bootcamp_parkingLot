@@ -132,7 +132,3 @@ func (p *ParkingLot) notifyReceiver() {
 	}
 
 }
-
-func (a *Attendant) receiveFull() {
-	a.parkingFull = true
-}

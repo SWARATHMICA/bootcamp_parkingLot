@@ -36,3 +36,7 @@ func (a *Attendant) UnPark(car *Car) (bool, error) {
 	}
 	return result, err
 }
+
+func (a *Attendant) receiveFull() {
+	a.parkingFull = true
+}
