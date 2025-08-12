@@ -23,6 +23,11 @@ type slot struct {
 	occupied bool
 }
 
+func (s *slot) free() {
+	s.car = nil
+	s.occupied = false
+}
+
 type ParkingLot struct {
 	capacity          int
 	slots             []slot
@@ -99,8 +104,7 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 func (p *ParkingLot) unPark(car *Car) (bool, error) {
 	for i := 0; i < p.capacity; i++ {
 		if p.isParked(*car) {
-			p.slots[i].car = nil
-			p.slots[i].occupied = false
+			p.slots[i].free()
 			if p.isFull {
 				p.isFull = false
 				if p.availableReceiver != nil {
