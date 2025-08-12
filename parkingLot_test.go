@@ -275,28 +275,28 @@ func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
 
 }
 
-func TestParkCarWithAttendent(t *testing.T) {
+func TestParkCarWithAttendant(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendent, _ := NewAttendant(parkingLot)
+	attendant, _ := NewAttendant(parkingLot)
 
-	_, err := attendent.ParkWithAttendant(&car)
+	_, err := attendant.ParkWithAttendant(&car)
 
 	if err != nil {
-		t.Errorf("parking lot should be full when parked through attendent")
+		t.Errorf("parking lot should be full when parked through attendant")
 	}
 }
 func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendent, _ := NewAttendant(parkingLot)
+	attendant, _ := NewAttendant(parkingLot)
 
 	//park the car
-	attendent.ParkWithAttendant(&car)
+	attendant.ParkWithAttendant(&car)
 
 	//unpark the car
-	attendent.UnParkWithAttendant(&car)
+	attendant.UnParkWithAttendant(&car)
 
 	//should be able to park again
-	_, err := attendent.ParkWithAttendant(&car)
+	_, err := attendant.ParkWithAttendant(&car)
 
 	if err != nil {
 		t.Error("should be able to park after parking become available")
@@ -311,19 +311,19 @@ func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 	_, err := attendant.ParkWithAttendant(&car)
 	expectedError := "parking lot is full, attendant cannot park the car"
 	if err.Error() != expectedError {
-		t.Errorf("parking lot should be full when parked through attendent")
+		t.Errorf("parking lot should be full when parked through attendant")
 	}
 }
 
-func TestUnParkCarWithAttendent(t *testing.T) {
+func TestUnParkCarWithAttendant(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendent, _ := NewAttendant(parkingLot)
+	attendant, _ := NewAttendant(parkingLot)
 
-	attendent.ParkWithAttendant(&car)
-	_, err := attendent.UnParkWithAttendant(&car)
+	attendant.ParkWithAttendant(&car)
+	_, err := attendant.UnParkWithAttendant(&car)
 
 	if err != nil {
-		t.Errorf("parking lot should  not be full when unparked through attendent")
+		t.Errorf("parking lot should  not be full when unparked through attendant")
 	}
 }
 
