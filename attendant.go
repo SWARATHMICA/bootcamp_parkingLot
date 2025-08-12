@@ -28,3 +28,11 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 
 	return false, errors.New("parking lot is full, attendant cannot park the car")
 }
+
+func (a *Attendant) UnPark(car *Car) (bool, error) {
+	result, err := a.Parkinglot.unPark(car)
+	if result {
+		a.parkingFull = false
+	}
+	return result, err
+}

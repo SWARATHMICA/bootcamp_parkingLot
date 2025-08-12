@@ -133,14 +133,6 @@ func (p *ParkingLot) notifyReceiver() {
 
 }
 
-func (a *Attendant) UnPark(car *Car) (bool, error) {
-	result, err := a.Parkinglot.unPark(car)
-	if result {
-		a.parkingFull = false
-	}
-	return result, err
-}
-
 func (a *Attendant) receiveFull() {
 	a.parkingFull = true
 }

@@ -44,3 +44,34 @@ func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 		t.Errorf("attendant cannot park when parking full")
 	}
 }
+
+func TestUnParkCarByAttendant(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+	attendant, _ := NewAttendant(parkingLot)
+
+	attendant.Park(&car)
+	_, err := attendant.UnPark(&car)
+
+	if err != nil {
+		t.Errorf("car should be unparked by attendant")
+	}
+}
+
+func TestAttendantParkAfterParkingAvailable(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+	attendant, _ := NewAttendant(parkingLot)
+
+	//park the car
+	attendant.Park(&car)
+
+	//unpark the car
+	attendant.UnPark(&car)
+
+	//should be able to park again
+	_, err := attendant.Park(&car)
+
+	if err != nil {
+		t.Error("should be able to park after parking become available")
+	}
+
+}

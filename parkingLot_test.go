@@ -274,36 +274,6 @@ func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
 	}
 
 }
-func TestAttendantParkAfterParkingAvailable(t *testing.T) {
-	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(parkingLot)
-
-	//park the car
-	attendant.Park(&car)
-
-	//unpark the car
-	attendant.UnPark(&car)
-
-	//should be able to park again
-	_, err := attendant.Park(&car)
-
-	if err != nil {
-		t.Error("should be able to park after parking become available")
-	}
-
-}
-
-func TestUnParkCarByAttendant(t *testing.T) {
-	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(parkingLot)
-
-	attendant.Park(&car)
-	_, err := attendant.UnPark(&car)
-
-	if err != nil {
-		t.Errorf("car should be unparked by attendant")
-	}
-}
 
 func TestAttendantReceiveFullNotification(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
