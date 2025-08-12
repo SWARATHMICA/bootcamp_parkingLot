@@ -31,10 +31,6 @@ type ParkingLot struct {
 	isFull            bool
 }
 
-func (a *Attendant) addParkingLotInAttendent(p *ParkingLot) {
-	a.Parkinglot = p
-}
-
 func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
 	p.availableReceiver = parkingAvailableReceiver
 }
