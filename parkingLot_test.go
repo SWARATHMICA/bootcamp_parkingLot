@@ -328,7 +328,7 @@ func TestAttendantReceiveFullNotification(t *testing.T) {
 
 	attendant.ParkWithAttendant(&car)
 
-	if !attendant.notified {
+	if !attendant.parkingFull {
 		t.Errorf("attendant should be notified about parking full")
 	}
 }

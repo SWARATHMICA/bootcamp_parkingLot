@@ -13,8 +13,8 @@ type ParkingAvailableReceiver interface {
 }
 
 type Attendant struct {
-	Parkinglot *ParkingLot
-	notified   bool
+	Parkinglot  *ParkingLot
+	parkingFull bool
 }
 
 type slot struct {
@@ -135,7 +135,7 @@ func (p *ParkingLot) notifyReceiver() {
 }
 
 func (a *Attendant) ParkWithAttendant(car *Car) (bool, error) {
-	if !a.notified {
+	if !a.parkingFull {
 		return a.Parkinglot.park(car)
 	}
 
@@ -147,7 +147,7 @@ func (a *Attendant) UnParkWithAttendant(car *Car) (bool, error) {
 }
 
 func (a *Attendant) receiveFull() {
-	a.notified = true
+	a.parkingFull = true
 }
 
 func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
@@ -156,8 +156,8 @@ func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
 		return nil, errors.New("cannot create attedant with nil parkinglot")
 	}
 	a := Attendant{
-		Parkinglot: parkingLot,
-		notified:   false,
+		Parkinglot:  parkingLot,
+		parkingFull: false,
 	}
 	parkingLot.addParkingFullReceiver(&a)
 
