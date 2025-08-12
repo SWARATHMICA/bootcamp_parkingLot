@@ -279,7 +279,7 @@ func TestParkCarWithAttendant(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(parkingLot)
 
-	_, err := attendant.ParkWithAttendant(&car)
+	_, err := attendant.Park(&car)
 
 	if err != nil {
 		t.Errorf("parking lot should be full when parked through attendant")
@@ -290,13 +290,13 @@ func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 	attendant, _ := NewAttendant(parkingLot)
 
 	//park the car
-	attendant.ParkWithAttendant(&car)
+	attendant.Park(&car)
 
 	//unpark the car
-	attendant.UnParkWithAttendant(&car)
+	attendant.UnPark(&car)
 
 	//should be able to park again
-	_, err := attendant.ParkWithAttendant(&car)
+	_, err := attendant.Park(&car)
 
 	if err != nil {
 		t.Error("should be able to park after parking become available")
@@ -307,8 +307,8 @@ func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(parkingLot)
-	attendant.ParkWithAttendant(&Car{"KK10AA1234"})
-	_, err := attendant.ParkWithAttendant(&car)
+	attendant.Park(&Car{"KK10AA1234"})
+	_, err := attendant.Park(&car)
 	expectedError := "parking lot is full, attendant cannot park the car"
 	if err.Error() != expectedError {
 		t.Errorf("parking lot should be full when parked through attendant")
@@ -319,8 +319,8 @@ func TestUnParkCarWithAttendant(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(parkingLot)
 
-	attendant.ParkWithAttendant(&car)
-	_, err := attendant.UnParkWithAttendant(&car)
+	attendant.Park(&car)
+	_, err := attendant.UnPark(&car)
 
 	if err != nil {
 		t.Errorf("parking lot should  not be full when unparked through attendant")
@@ -343,7 +343,7 @@ func TestAttendantReceiveFullNotification(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(parkingLot)
 
-	attendant.ParkWithAttendant(&car)
+	attendant.Park(&car)
 
 	if !attendant.parkingFull {
 		t.Errorf("attendant should be notified about parking full")
