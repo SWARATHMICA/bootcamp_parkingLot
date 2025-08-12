@@ -23,6 +23,10 @@ type slot struct {
 	occupied bool
 }
 
+func (s slot) isEmpty() bool {
+	return !s.occupied
+}
+
 func (s *slot) occupy(c *Car) {
 	s.car = c
 	s.occupied = true
@@ -87,7 +91,7 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 		return false, errors.New("Car already parked")
 	}
 	for i := 0; i < p.capacity; i++ {
-		if !p.slots[i].occupied {
+		if p.slots[i].isEmpty() {
 			p.slots[i].occupy(c)
 
 			if i == p.capacity-1 {
