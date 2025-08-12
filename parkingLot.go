@@ -121,7 +121,10 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 
 func (p *ParkingLot) isParked(car Car) bool {
 	for _, slot := range p.slots {
-		if slot.occupied && slot.car.isEqual(car) {
+		if slot.isEmpty() {
+			continue
+		}
+		if car.isEqual(*slot.car) {
 			return true
 		}
 	}
