@@ -18,9 +18,9 @@ type Attendant struct {
 }
 
 type slot struct {
-	id          int
-	numberPlate string
-	occupied    bool
+	id       int
+	car      *Car
+	occupied bool
 }
 
 type ParkingLot struct {
@@ -67,9 +67,9 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	lots := make([]slot, 0, capacity)
 	for i := 0; i < capacity; i++ {
 		newLot := slot{
-			id:          i + 1,
-			numberPlate: "",
-			occupied:    false,
+			id:       i + 1,
+			car:      nil,
+			occupied: false,
 		}
 		lots = append(lots, newLot)
 	}
@@ -77,13 +77,13 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{slots: lots, capacity: capacity}, nil
 }
 
-func (p *ParkingLot) park(c Car) (bool, error) {
-	if p.isParked(c) {
+func (p *ParkingLot) park(c *Car) (bool, error) {
+	if p.isParked(*c) {
 		return false, errors.New("Car already parked")
 	}
 	for i := 0; i < p.capacity; i++ {
 		if !p.slots[i].occupied {
-			p.slots[i].numberPlate = c.numberPlate
+			p.slots[i].car = c
 			p.slots[i].occupied = true
 			if i == p.capacity-1 {
 				p.isFull = true
@@ -101,10 +101,10 @@ func (p *ParkingLot) park(c Car) (bool, error) {
 
 }
 
-func (p *ParkingLot) unPark(car Car) (bool, error) {
+func (p *ParkingLot) unPark(car *Car) (bool, error) {
 	for i := 0; i < p.capacity; i++ {
-		if p.isParked(car) {
-			p.slots[i].numberPlate = ""
+		if p.isParked(*car) {
+			p.slots[i].car = nil
 			p.slots[i].occupied = false
 			if p.isFull {
 				p.isFull = false
@@ -121,7 +121,7 @@ func (p *ParkingLot) unPark(car Car) (bool, error) {
 
 func (p *ParkingLot) isParked(car Car) bool {
 	for _, slot := range p.slots {
-		if slot.occupied && slot.numberPlate == car.numberPlate {
+		if slot.occupied && slot.car.isEqual(car) {
 			return true
 		}
 	}
@@ -135,7 +135,7 @@ func (p *ParkingLot) notifyReceiver() {
 
 }
 
-func (a *Attendant) ParkWithAttendant(car Car) (bool, error) {
+func (a *Attendant) ParkWithAttendant(car *Car) (bool, error) {
 	if !a.notified {
 		return a.Parkinglot.park(car)
 	}
@@ -143,7 +143,7 @@ func (a *Attendant) ParkWithAttendant(car Car) (bool, error) {
 	return false, errors.New("parking lot is full, attendant cannot park the car")
 }
 
-func (a *Attendant) UnParkWithAttendant(car Car) (bool, error) {
+func (a *Attendant) UnParkWithAttendant(car *Car) (bool, error) {
 	return a.Parkinglot.unPark(car)
 }
 
