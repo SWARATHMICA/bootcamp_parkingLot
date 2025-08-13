@@ -324,3 +324,14 @@ func TestCannotParkNil(t *testing.T) {
 	}
 
 }
+
+func TestCannotUnparkNil(t *testing.T) {
+
+	parkinglot, _ := NewParkingLot(1)
+
+	_, err := parkinglot.unPark(nil)
+
+	if err == nil {
+		t.Error("nil car cannot be unparked")
+	}
+}

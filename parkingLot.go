@@ -101,6 +101,9 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 }
 
 func (p *ParkingLot) unPark(car *Car) (bool, error) {
+	if car == nil {
+		return false, errors.New("unpark: car cannot be nil")
+	}
 	for i := 0; i < p.capacity; i++ {
 		if p.isParked(*car) {
 			p.slots[i].free()
