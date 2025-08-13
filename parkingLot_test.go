@@ -312,3 +312,15 @@ func TestParkAfterUnpark(t *testing.T) {
 		t.Errorf("car should park after nupark")
 	}
 }
+
+func TestCannotParkNil(t *testing.T) {
+
+	parkinglot, _ := NewParkingLot(1)
+
+	_, err := parkinglot.park(nil)
+
+	if err == nil {
+		t.Errorf("car to be parked cannot be nil")
+	}
+
+}

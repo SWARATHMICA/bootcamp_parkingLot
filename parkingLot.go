@@ -74,6 +74,9 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 }
 
 func (p *ParkingLot) park(c *Car) (bool, error) {
+	if c == nil {
+		return false, errors.New("park: car cannot be nil")
+	}
 	if p.isParked(*c) {
 		return false, errors.New("Car already parked")
 	}
