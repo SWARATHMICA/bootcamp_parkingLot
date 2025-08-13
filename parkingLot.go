@@ -86,11 +86,7 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 
 			if i == p.capacity-1 {
 				p.isFull = true
-				if p.fullReceiver != nil {
-					p.notifyReceiver()
-
-				}
-
+				p.notifyReceiver()
 			}
 			return true, nil
 
