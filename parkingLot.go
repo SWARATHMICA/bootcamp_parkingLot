@@ -119,26 +119,21 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 		return false, errors.New("unpark: car cannot be nil")
 	}
 	for i := 0; i < p.capacity; i++ {
-		if p.isNotParked(*car) {
+		if p.slots[i].isEmpty() {
 			continue
 		}
 
-		p.slots[i].free()
+		if p.slots[i].car.isEqual(*car) {
+			p.slots[i].free()
 
-		if p.isNotFull() {
-			continue
+			p.isFull = false
+
+			p.notifyAvailableReciever()
+
+			return true, nil
 		}
-		p.isFull = false
-
-		p.notifyAvailableReciever()
-
-		return true, nil
 	}
 	return false, errors.New("Car is not found in the parking lot")
-}
-
-func (p *ParkingLot) isNotFull() bool {
-	return !p.isFull
 }
 
 func (p *ParkingLot) notifyAvailableReciever() {
@@ -164,8 +159,4 @@ func (p *ParkingLot) notifyReceiver() {
 		r.receiveFull()
 	}
 
-}
-
-func (p *ParkingLot) isNotParked(car Car) bool {
-	return !p.isParked(car)
 }

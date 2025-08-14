@@ -360,7 +360,7 @@ func TestTwoCarsNotEqual(t *testing.T) {
 
 }
 
-func TestParkAfterUnpark(t *testing.T) {
+func TestParkAfterUnparkForSingleSlot(t *testing.T) {
 	parkinglot, _ := NewParkingLot(1)
 
 	parkinglot.park(&car)
@@ -393,5 +393,28 @@ func TestCannotUnparkNil(t *testing.T) {
 
 	if err == nil {
 		t.Error("nil car cannot be unparked")
+	}
+}
+func TestCarShouldGetParkedAferUnpark(t *testing.T) {
+	parkinglot, _ := NewParkingLot(2)
+	car2 := Car{"AA10AK2345"}
+
+	_, err1 := parkinglot.park(&car)
+	if err1 != nil {
+		t.Fatal("car should be parked")
+	}
+	_, err1 = parkinglot.park(&car2)
+	if err1 != nil {
+		t.Fatal("car2 should be parked")
+	}
+
+	_, err1 = parkinglot.unPark(&car2)
+	if err1 != nil {
+		t.Fatal("car2 should be unparked")
+	}
+	_, err := parkinglot.park(&car2)
+
+	if err != nil {
+		t.Fatalf("car2 should be parked after unpark : %v", err)
 	}
 }
