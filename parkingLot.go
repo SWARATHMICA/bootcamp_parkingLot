@@ -18,6 +18,7 @@ type slot struct {
 	occupied bool
 }
 
+// TODO consitency whether pointer or value and why do we choose one over the other?
 func (s slot) isEmpty() bool {
 	return !s.occupied
 }
@@ -36,13 +37,16 @@ func (s *slot) free() {
 }
 
 type ParkingLot struct {
-	capacity          int
-	slots             []slot
+	capacity int
+	slots    []slot
+	//TODO reveal intention
 	fullReceiver      []ParkingFullReceiver
 	availableReceiver ParkingAvailableReceiver
-	isFull            bool
+	//TODO fewest elements
+	isFull bool
 }
 
+// TODO idiomatic go
 func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
 	p.availableReceiver = parkingAvailableReceiver
 }
@@ -66,7 +70,8 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	lots := make([]slot, 0, capacity)
 	for i := 0; i < capacity; i++ {
 		newLot := slot{
-			id:       i + 1,
+			id: i + 1,
+			//TODO i dont know may be idiomatic go please check
 			car:      nil,
 			occupied: false,
 		}
@@ -76,6 +81,7 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{slots: lots, capacity: capacity}, nil
 }
 
+// TODO fewest elements
 func (p *ParkingLot) park(c *Car) (bool, error) {
 	if c == nil {
 		return false, errors.New("park: car cannot be nil")
@@ -127,11 +133,13 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 			p.slots[i].free()
 
 			p.isFull = false
-
-			p.notifyAvailableReciever()
-
+			//TODO: check coupling and correct indentation
+			if !p.isFullyFilled() {
+				p.notifyAvailableReciever()
+			}
 			return true, nil
 		}
+
 	}
 	return false, errors.New("Car is not found in the parking lot")
 }
@@ -142,6 +150,7 @@ func (p *ParkingLot) notifyAvailableReciever() {
 	}
 }
 
+// TODO inconsistency car is used as a pointer argument at some place and some places its pass by value why?
 func (p *ParkingLot) isParked(car Car) bool {
 	for _, slot := range p.slots {
 		if slot.isEmpty() {
