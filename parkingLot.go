@@ -88,8 +88,8 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 			continue
 		}
 		p.slots[i].occupy(c)
-
-		if p.isFilled() {
+		//TODO: Refactor : Correct indentation
+		if p.isFullyFilled() {
 			p.isFull = true
 			if p.fullReceiver != nil {
 				p.notifyReceiver()
@@ -105,7 +105,7 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 
 }
 
-func (p *ParkingLot) isFilled() bool {
+func (p *ParkingLot) isFullyFilled() bool {
 	for _, slot := range p.slots {
 		if !slot.occupied {
 			return false
