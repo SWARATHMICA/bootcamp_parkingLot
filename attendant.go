@@ -44,3 +44,7 @@ func (a *Attendant) UnPark(car *Car) (bool, error) {
 func (a *Attendant) receiveFull() {
 	a.parkingFull = true
 }
+
+func (a *Attendant) checkCarIsParked(car Car) bool {
+	return a.Parkinglot.isParked(car)
+}
