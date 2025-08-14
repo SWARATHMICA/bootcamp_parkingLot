@@ -113,7 +113,7 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 
 		p.slots[i].free()
 
-		if !p.isFull {
+		if p.isNotFull() {
 			continue
 		}
 		p.isFull = false
@@ -123,6 +123,10 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 		return true, nil
 	}
 	return false, errors.New("Car is not found in the parking lot")
+}
+
+func (p *ParkingLot) isNotFull() bool {
+	return !p.isFull
 }
 
 func (p *ParkingLot) notifyAvailableReciever() {
