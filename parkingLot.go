@@ -89,7 +89,7 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 		}
 		p.slots[i].occupy(c)
 
-		if i == p.capacity-1 {
+		if p.isFilled() {
 			p.isFull = true
 			if p.fullReceiver != nil {
 				p.notifyReceiver()
@@ -103,6 +103,15 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 	}
 	return false, errors.New("ParkingLot is full")
 
+}
+
+func (p *ParkingLot) isFilled() bool {
+	for _, slot := range p.slots {
+		if !slot.occupied {
+			return false
+		}
+	}
+	return true
 }
 
 func (p *ParkingLot) unPark(car *Car) (bool, error) {

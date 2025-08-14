@@ -108,6 +108,66 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 
 }
 
+type mockParkingFullReceiverCounter struct {
+	parkingFullCalledTimes int
+}
+
+func (s *mockParkingFullReceiverCounter) receiveFull() {
+
+	s.parkingFullCalledTimes++
+}
+
+func TestCheckIfFullReceiverGetsNotifiedWhenCarParkedAfterUnpark(t *testing.T) {
+
+	car1 := &Car{
+		numberPlate: "KK-09-AK-1234",
+	}
+	car2 := &Car{
+		numberPlate: "KK-09-AK-2341",
+	}
+
+	car3 := &Car{
+		numberPlate: "KK-09-AK-234sds",
+	}
+	s := &mockParkingFullReceiverCounter{}
+
+	p, _ := NewParkingLot(3)
+	p.addParkingFullReceiver(s)
+
+	_, err := p.park(car1)
+	if err != nil {
+		t.Fatal("car1 should be parked")
+	}
+
+	_, err = p.park(car2)
+	if err != nil {
+		t.Fatal("car2 should be parked")
+	}
+
+	_, err = p.park(car3)
+	if err != nil {
+		t.Fatal("car3 should be parked")
+	}
+	if s.parkingFullCalledTimes != 1 {
+		t.Fatalf("parking full reciver should have been called once but was %d", s.parkingFullCalledTimes)
+	}
+
+	_, err = p.unPark(car1)
+	if err != nil {
+		t.Fatal("car3 should be parked")
+	}
+
+	_, err = p.park(car1)
+	if err != nil {
+		t.Fatal("car1 should be parked")
+	}
+
+	if s.parkingFullCalledTimes != 2 {
+		t.Fatalf("parking full reciver should have been called once but was %d", s.parkingFullCalledTimes)
+	}
+
+}
+
 func TestUnparkCar(t *testing.T) {
 	p, _ := NewParkingLot(1)
 	car := &Car{
