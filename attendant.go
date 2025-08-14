@@ -23,6 +23,9 @@ func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
 
 // TODO fewest elements
 func (a *Attendant) Park(car *Car) (bool, error) {
+	if car == nil {
+		return false, errors.New("car cannot be nil")
+	}
 	if !a.parkingFull {
 		return a.Parkinglot.park(car)
 	}

@@ -86,3 +86,17 @@ func TestAttendantReceiveFullNotification(t *testing.T) {
 		t.Errorf("attendant should be notified about parking full")
 	}
 }
+
+//Multiple parking lots
+
+func TestAttendantCannotParkNilCar(t *testing.T) {
+	parkinglot, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(parkinglot)
+
+	_, err := attendant.Park(nil)
+	expectedError := "car cannot be nil"
+
+	if err.Error() != expectedError {
+		t.Errorf("attendant cannot park nil car")
+	}
+}
