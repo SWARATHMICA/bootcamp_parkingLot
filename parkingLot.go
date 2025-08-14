@@ -107,7 +107,7 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 		return false, errors.New("unpark: car cannot be nil")
 	}
 	for i := 0; i < p.capacity; i++ {
-		if !p.isParked(*car) {
+		if p.isNotParked(*car) {
 			continue
 		}
 
@@ -148,4 +148,8 @@ func (p *ParkingLot) notifyReceiver() {
 		r.receiveFull()
 	}
 
+}
+
+func (p *ParkingLot) isNotParked(car Car) bool {
+	return !p.isParked(car)
 }
