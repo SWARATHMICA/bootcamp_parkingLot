@@ -100,3 +100,43 @@ func TestAttendantCannotParkNilCar(t *testing.T) {
 		t.Errorf("attendant cannot park nil car")
 	}
 }
+
+func TestAttendantShouldCheckIfCarAlreadyParked(t *testing.T) {
+	parkinglot, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(parkinglot)
+	attendant.Park(&car)
+	isParked := attendant.checkIsCarParked(car)
+	if !isParked {
+		t.Errorf("car is already parked")
+	}
+}
+
+func TestAttendantShouldCheckCarIsParkedAfterUnpark(t *testing.T) {
+	parkinglot, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(parkinglot)
+	car2 := Car{"UM-12-TK-1234"}
+
+	_, err := attendant.Park(&car)
+	if err != nil {
+		t.Fatal("car should be parked")
+	}
+
+	_, err = attendant.Park(&car2)
+	if err != nil {
+		t.Fatal("car2 should be parked")
+	}
+	_, err = attendant.UnPark(&car2)
+	if err != nil {
+		t.Fatal("car2 should be unparked")
+	}
+
+	isCarParked := attendant.checkIsCarParked(car)
+	isCar2Parked := attendant.checkIsCarParked(car2)
+
+	if isCarParked == false {
+		t.Error("car should be parked in parking lot")
+	}
+	if isCar2Parked == true {
+		t.Errorf("car is already parked")
+	}
+}
