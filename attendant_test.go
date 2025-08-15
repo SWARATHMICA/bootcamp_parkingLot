@@ -14,7 +14,9 @@ func TestCreateNewAttendant(t *testing.T) {
 func TestAttedantCannotBeCreatedWithNilParkingLot(t *testing.T) {
 	_, err := NewAttendant(nil)
 
-	if err == nil {
+	expectedError := "attendant should have be created with nil parking lot"
+
+	if err.Error() != expectedError {
 		t.Error("attendant should have be created with nil parking lot")
 	}
 }
@@ -108,5 +110,44 @@ func TestAttendantShouldCheckIfCarAlreadyParked(t *testing.T) {
 	isParked := attendant.checkCarIsParked(car)
 	if !isParked {
 		t.Errorf("car is already parked")
+	}
+}
+
+func TestAttendantHasMultipleParkingLots(t *testing.T) {
+	parkinglot1, err1 := NewParkingLot(1)
+	if err1 != nil {
+		t.Fatalf("failed to create parking lot 1: %v", err1)
+	}
+
+	parkinglot2, err2 := NewParkingLot(1)
+	if err2 != nil {
+		t.Fatalf("failed to create parking lot 2: %v", err2)
+	}
+
+	_, err := NewAttendant(parkinglot1, parkinglot2)
+
+	if err != nil {
+		t.Errorf("expected attendant to be created with multiple parking lots, got error: %v", err)
+	}
+}
+
+func TestAttendantHasMultipleParkingLotsWithNilLot(t *testing.T) {
+	parkinglot1, err1 := NewParkingLot(1)
+	if err1 != nil {
+		t.Fatalf("failed to create parking lot 1: %v", err1)
+	}
+
+	var parkinglot2 *ParkingLot = nil
+
+	_, err := NewAttendant(parkinglot1, parkinglot2)
+
+	expectedError := "cannot create attendant with nil parkinglot"
+
+	if err == nil {
+		t.Fatalf("expected error %q but got nil", expectedError)
+	}
+
+	if err.Error() == expectedError {
+		t.Errorf("expected error %q, but got %q", expectedError, err.Error())
 	}
 }

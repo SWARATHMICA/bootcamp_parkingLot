@@ -3,20 +3,33 @@ package parkinglot
 import "errors"
 
 type Attendant struct {
-	Parkinglot  *ParkingLot
+	Parkinglot  []*ParkingLot
 	parkingFull bool
 }
 
-func NewAttendant(parkingLot *ParkingLot) (*Attendant, error) {
+func NewAttendant(parkingLot ...*ParkingLot) (*Attendant, error) {
+	parkinglotSlice := []*ParkingLot{}
+	if len(parkingLot) == 0 {
 
-	if parkingLot == nil {
-		return nil, errors.New("cannot create attedant with nil parkinglot")
+		return &Attendant{Parkinglot: []*ParkingLot{}}, nil
+
 	}
+	for _, p := range parkingLot {
+
+		parkinglotSlice = append(parkinglotSlice, p)
+	}
+
 	a := Attendant{
-		Parkinglot:  parkingLot,
+		Parkinglot:  parkinglotSlice,
 		parkingFull: false,
 	}
-	parkingLot.addParkingFullReceiver(&a)
+	for _, p := range parkinglotSlice {
+		if p == nil {
+			return nil, errors.New("attendant should have be created with nil parking lot")
+		}
+
+		p.addParkingFullReceiver(&a)
+	}
 
 	return &a, nil
 }
@@ -27,14 +40,14 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 		return false, errors.New("car cannot be nil")
 	}
 	if !a.parkingFull {
-		return a.Parkinglot.park(car)
+		return a.Parkinglot[0].park(car)
 	}
 
 	return false, errors.New("parking lot is full, attendant cannot park the car")
 }
 
 func (a *Attendant) UnPark(car *Car) (bool, error) {
-	result, err := a.Parkinglot.unPark(car)
+	result, err := a.Parkinglot[0].unPark(car)
 	if result {
 		a.parkingFull = false
 	}
@@ -46,5 +59,5 @@ func (a *Attendant) receiveFull() {
 }
 
 func (a *Attendant) checkCarIsParked(car Car) bool {
-	return a.Parkinglot.isParked(car)
+	return a.Parkinglot[0].isParked(car)
 }
