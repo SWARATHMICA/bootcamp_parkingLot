@@ -35,13 +35,23 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 	if car == nil {
 		return false, errors.New("car cannot be nil")
 	}
+
+	if a.checkIsCarParked(*car) {
+		return false, errors.New("attendant: car already parked")
+	}
+
 	if !a.parkingFull {
-		return a.Parkinglot[0].park(car)
+		for _, p := range a.Parkinglot {
+			if !p.isFull {
+				p.park(car)
+				return true, nil
+			}
+
+		}
 	}
 
 	return false, errors.New("parking lot is full, attendant cannot park the car")
 }
-
 func (a *Attendant) UnPark(car *Car) (bool, error) {
 	result, err := a.Parkinglot[0].unPark(car)
 	if result {
@@ -51,7 +61,15 @@ func (a *Attendant) UnPark(car *Car) (bool, error) {
 }
 
 func (a *Attendant) receiveFull() {
-	a.parkingFull = true
+	count := 0
+	for _, parkinglot := range a.Parkinglot {
+		if parkinglot.isFull {
+			count++
+		}
+	}
+	if count == len(a.Parkinglot) {
+		a.parkingFull = true
+	}
 }
 
 func (a *Attendant) checkIsCarParked(car Car) bool {

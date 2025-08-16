@@ -178,3 +178,43 @@ func TestCheckIsCarParkedWhenMultipleParkingLotAvailable(t *testing.T) {
 		t.Error("car should be found in parking lot 2")
 	}
 }
+
+func TestAttendantParkCarInNextParkingLotWithAvailableSlot(t *testing.T) {
+	parkkinglot1, _ := NewParkingLot(1)
+	parkkinglot2, _ := NewParkingLot(3)
+	attendant, _ := NewAttendant(parkkinglot1, parkkinglot2)
+
+	parkkinglot1.park(&car)
+
+	_, err := attendant.Park(&Car{"1234567"})
+
+	if err != nil {
+		t.Error("car should be parked at parking lot 1")
+	}
+
+	_, err = attendant.Park(&car)
+
+	const expectedError = "attendant: car already parked"
+	if err.Error() != expectedError {
+		t.Error("attend should not park the already parked car")
+	}
+}
+
+func TestAttendantReceiveFullNotificationWhenAllParkingLotIsFull(t *testing.T) {
+	parkingLot1, _ := NewParkingLot(1)
+	parkingLot2, _ := NewParkingLot(1)
+	parkingLot3, _ := NewParkingLot(1)
+	attendant, err := NewAttendant(parkingLot1, parkingLot2, parkingLot3)
+
+	if err != nil {
+		t.Fatal("attendant was not created with parkinglot1, parkinglot2, parkinglot3")
+	}
+
+	attendant.Park(&car)
+	attendant.Park(&Car{"123456789"})
+	attendant.Park(&Car{"098765432"})
+
+	if !attendant.parkingFull {
+		t.Errorf("attendant should be notified about parking full")
+	}
+}
