@@ -160,3 +160,21 @@ func TestAttendantCanAcceptMultipleParkingLot(t *testing.T) {
 		t.Errorf("expected attendant to be created with multiple parking lots, got error: %v", err)
 	}
 }
+func TestCheckIsCarParkedWhenMultipleParkingLotAvailable(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(2)
+	parkinglot2, _ := NewParkingLot(3)
+
+	_, err := parkinglot2.park(&car)
+
+	if err != nil {
+		t.Fatal("car should be parked in the parking log 2")
+	}
+
+	attendant, _ := NewAttendant(parkinglot1, parkinglot2)
+
+	flag := attendant.checkIsCarParked(car)
+
+	if flag == false {
+		t.Error("car should be found in parking lot 2")
+	}
+}

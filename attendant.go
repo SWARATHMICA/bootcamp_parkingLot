@@ -55,5 +55,10 @@ func (a *Attendant) receiveFull() {
 }
 
 func (a *Attendant) checkIsCarParked(car Car) bool {
-	return a.Parkinglot[0].isParked(car)
+	for _, parkinglot := range a.Parkinglot {
+		if parkinglot.isParked(car) {
+			return true
+		}
+	}
+	return false
 }
