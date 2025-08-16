@@ -53,10 +53,19 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 	return false, errors.New("parking lot is full, attendant cannot park the car")
 }
 func (a *Attendant) UnPark(car *Car) (bool, error) {
-	result, err := a.Parkinglot[0].unPark(car)
-	if result {
+	if !a.checkIsCarParked(*car) {
+		return false, errors.New("attendant/unpark: car is not parked")
+	}
+	var result bool
+	var err error
+	for _, parkinglot := range a.Parkinglot {
+		if !parkinglot.isParked(*car) {
+			continue
+		}
+		result, err = parkinglot.unPark(car)
 		a.parkingFull = false
 	}
+
 	return result, err
 }
 

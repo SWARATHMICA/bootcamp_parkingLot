@@ -218,3 +218,36 @@ func TestAttendantReceiveFullNotificationWhenAllParkingLotIsFull(t *testing.T) {
 		t.Errorf("attendant should be notified about parking full")
 	}
 }
+
+func TestAttendantIsAbleToUnparkAfterParkForMultipleParkingLots(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(2)
+	parkinglot3, _ := NewParkingLot(1)
+	attendant, _ := NewAttendant(parkinglot1, parkinglot2, parkinglot3)
+
+	_, err := parkinglot1.park(&car)
+	if err != nil {
+		t.Fatal("car should be parking in parkinglot 1")
+	}
+
+	anotherCar := &Car{"1234567"}
+	_, err = parkinglot2.park(anotherCar)
+	if err != nil {
+		t.Fatal("another should be parking in parkinglot 2")
+	}
+
+	_, err = parkinglot3.park(&Car{"09876533"})
+	if err != nil {
+		t.Fatal("Car{09876533} should be parking in parkinglot 2")
+	}
+
+	check, err := attendant.UnPark(anotherCar)
+
+	if err != nil {
+		t.Error("another car should be unparked from parkinglot 2")
+	}
+
+	if check == false {
+		t.Error("flag should be true after another unpark from parkinglot 2")
+	}
+}
