@@ -36,22 +36,18 @@ func (s *slot) free() {
 }
 
 type ParkingLot struct {
-	capacity int
-	slots    []slot
-	//TODO reveal intention
-	fullReceiver      []ParkingFullReceiver
-	availableReceiver ParkingAvailableReceiver
-	//TODO fewest elements
-	isFull bool
+	capacity             int
+	slots                []slot
+	fullSubscribers      []ParkingFullReceiver
+	availableSubscribers ParkingAvailableReceiver
 }
 
-// TODO idiomatic go
-func (p *ParkingLot) setParkingAvailableReceiver(parkingAvailableReceiver ParkingAvailableReceiver) {
-	p.availableReceiver = parkingAvailableReceiver
+func (p *ParkingLot) OnAvailable(parkingAvailableReceiver ParkingAvailableReceiver) {
+	p.availableSubscribers = parkingAvailableReceiver
 }
 
-func (p *ParkingLot) addParkingFullReceiver(r ParkingFullReceiver) {
-	p.fullReceiver = append(p.fullReceiver, r)
+func (p *ParkingLot) OnFull(r ParkingFullReceiver) {
+	p.fullSubscribers = append(p.fullSubscribers, r)
 }
 
 type Car struct {
@@ -77,7 +73,6 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	return &ParkingLot{slots: lots, capacity: capacity}, nil
 }
 
-// TODO fewest elements
 func (p *ParkingLot) park(c *Car) (bool, error) {
 	if c == nil {
 		return false, errors.New("park: car cannot be nil")
@@ -90,13 +85,10 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 			continue
 		}
 		p.slots[i].occupy(c)
-		//TODO: Refactor : Correct indentation
-		if p.isFullyFilled() {
-			p.isFull = true
-			if p.fullReceiver != nil {
-				p.notifyReceiver()
 
-			}
+		if p.isFullyFilled() {
+
+			p.notifyReceiver()
 
 		}
 
@@ -128,7 +120,6 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 		if p.slots[i].car.isEqual(car) {
 			p.slots[i].free()
 
-			p.isFull = false
 			//TODO: check coupling and correct indentation
 			if !p.isFullyFilled() {
 				p.notifyAvailableReciever()
@@ -141,8 +132,8 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 }
 
 func (p *ParkingLot) notifyAvailableReciever() {
-	if p.availableReceiver != nil {
-		p.availableReceiver.receiveAvailable()
+	if p.availableSubscribers != nil {
+		p.availableSubscribers.receiveAvailable()
 	}
 }
 
@@ -159,7 +150,7 @@ func (p *ParkingLot) isParked(car *Car) bool {
 }
 
 func (p *ParkingLot) notifyReceiver() {
-	for _, r := range p.fullReceiver {
+	for _, r := range p.fullSubscribers {
 		r.receiveFull()
 	}
 

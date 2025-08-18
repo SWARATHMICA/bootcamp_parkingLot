@@ -132,7 +132,7 @@ func TestCheckIfFullReceiverGetsNotifiedWhenCarParkedAfterUnpark(t *testing.T) {
 	s := &mockParkingFullReceiverCounter{}
 
 	p, _ := NewParkingLot(3)
-	p.addParkingFullReceiver(s)
+	p.OnFull(s)
 
 	_, err := p.park(car1)
 	if err != nil {
@@ -242,8 +242,8 @@ func TestMultipleReceiversShouldBeNotifiedWhenParkingFull(t *testing.T) {
 	s := &mockParkingFullReceiver{}
 	another := &mockParkingFullReceiver{}
 
-	p.addParkingFullReceiver(s)
-	p.addParkingFullReceiver(another)
+	p.OnFull(s)
+	p.OnFull(another)
 	p.park(&car)
 
 	if !s.parkingFull {
@@ -266,7 +266,7 @@ func (m *mockParkingAvailableReceiver) receiveAvailable() {
 func TestSingleRecieverNotifiedParkingAvailable(t *testing.T) {
 	p, _ := NewParkingLot(1)
 	parkingAvailableReceiver := mockParkingAvailableReceiver{}
-	p.setParkingAvailableReceiver(&parkingAvailableReceiver)
+	p.OnAvailable(&parkingAvailableReceiver)
 	p.park(&car)
 	p.unPark(&car)
 
@@ -280,9 +280,9 @@ func TestCannotNofifyMultiplePeopleWhenParkingAvailable(t *testing.T) {
 	parkingFullReceiver := mockParkingFullReceiver{}
 	parkingAvailableReceiver := mockParkingAvailableReceiver{}
 
-	p.addParkingFullReceiver(&parkingFullReceiver)
+	p.OnFull(&parkingFullReceiver)
 
-	p.setParkingAvailableReceiver(&parkingAvailableReceiver)
+	p.OnAvailable(&parkingAvailableReceiver)
 
 	p.park(&car)
 	if !parkingFullReceiver.parkingFull {
@@ -319,8 +319,8 @@ func (o *ReceiveBothNotification) receiveAvailable() {
 func TestNotifyOwnerWhenFullAndWhenAvailable(t *testing.T) {
 	p, _ := NewParkingLot(1)
 	owner := ReceiveBothNotification{}
-	p.setParkingAvailableReceiver(&owner)
-	p.addParkingFullReceiver(&owner)
+	p.OnAvailable(&owner)
+	p.OnFull(&owner)
 	p.park(&car)
 
 	if !owner.notifiedFull {

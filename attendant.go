@@ -24,13 +24,12 @@ func NewAttendant(parkingLots ...*ParkingLot) (*Attendant, error) {
 	}
 
 	for _, parkinglot := range parkinglotSlice {
-		parkinglot.addParkingFullReceiver(&attendant)
+		parkinglot.OnFull(&attendant)
 	}
 
 	return &attendant, nil
 }
 
-// TODO fewest elements
 func (a *Attendant) Park(car *Car) (bool, error) {
 	if car == nil {
 		return false, errors.New("car cannot be nil")
@@ -42,7 +41,7 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 
 	if !a.parkingFull {
 		for _, p := range a.Parkinglot {
-			if !p.isFull {
+			if !p.isFullyFilled() {
 				p.park(car)
 				return true, nil
 			}
@@ -72,7 +71,7 @@ func (a *Attendant) UnPark(car *Car) (bool, error) {
 func (a *Attendant) receiveFull() {
 	count := 0
 	for _, parkinglot := range a.Parkinglot {
-		if parkinglot.isFull {
+		if parkinglot.isFullyFilled() {
 			count++
 		}
 	}
