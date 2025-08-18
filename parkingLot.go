@@ -155,3 +155,13 @@ func (p *ParkingLot) notifyReceiver() {
 	}
 
 }
+
+func (lot *ParkingLot) CarsParkedCount() int {
+	count := 0
+	for _, slot := range lot.slots {
+		if slot.car != nil {
+			count++
+		}
+	}
+	return count
+}

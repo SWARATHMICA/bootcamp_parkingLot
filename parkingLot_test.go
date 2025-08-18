@@ -418,3 +418,18 @@ func TestCarShouldGetParkedAferUnpark(t *testing.T) {
 		t.Fatalf("car2 should be parked after unpark : %v", err)
 	}
 }
+
+func TestCarsParkedCount(t *testing.T) {
+	parkingLot, _ := NewParkingLot(3)
+	parkingLot.park(&car)
+
+	car2 := Car{"AA10BB2345"}
+	parkingLot.park(&car2)
+
+	count := parkingLot.CarsParkedCount()
+
+	if count != 2 {
+		t.Errorf("there are only 2 cars parked in the parkinglot")
+	}
+
+}
