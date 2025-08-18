@@ -5,7 +5,7 @@ import (
 )
 
 type ParkingFullReceiver interface {
-	receiveFull()
+	receiveFull(int)
 }
 
 type ParkingAvailableReceiver interface {
@@ -150,8 +150,8 @@ func (p *ParkingLot) isParked(car *Car) bool {
 }
 
 func (p *ParkingLot) notifyReceiver() {
-	for _, r := range p.fullSubscribers {
-		r.receiveFull()
+	for i, r := range p.fullSubscribers {
+		r.receiveFull(i)
 	}
 
 }

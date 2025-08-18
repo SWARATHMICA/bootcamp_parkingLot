@@ -4,13 +4,11 @@ import "errors"
 
 type Attendant struct {
 	Parkinglot      []*ParkingLot
-	parkingFull     bool
 	parkingStatuses []bool
 }
 
 func NewAttendant(parkingLots ...*ParkingLot) (*Attendant, error) {
 	parkinglotSlice := []*ParkingLot{}
-
 	for _, parkingLot := range parkingLots {
 		if parkingLot == nil {
 			return nil, errors.New("attendant cannot have nil parkinglot")
@@ -19,9 +17,10 @@ func NewAttendant(parkingLots ...*ParkingLot) (*Attendant, error) {
 
 	parkinglotSlice = append(parkinglotSlice, parkingLots...)
 
+	statuses := make([]bool, len(parkingLots))
 	attendant := Attendant{
-		Parkinglot:  parkinglotSlice,
-		parkingFull: false,
+		Parkinglot:      parkingLots,
+		parkingStatuses: statuses,
 	}
 
 	for _, parkinglot := range parkinglotSlice {
@@ -39,18 +38,16 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("attendant: car already parked")
 	}
-	//todo leverage individual parking lots subscription, to directly park in available parking lots
-	// check a.parkingstatuses[0], [1]
-	// do  I need the above boolean statuses ?
 
-	if !a.parkingFull { //TODO: correct indentation
-		for _, p := range a.Parkinglot {
-			if !p.isFullyFilled() {
-				p.park(car)
-				return nil
-			}
-
+	for i, p := range a.Parkinglot {
+		if a.parkingStatuses[i] {
+			continue
 		}
+		err := p.park(car)
+		if err == nil {
+			return nil
+		}
+		return err
 	}
 
 	return errors.New("parking lot is full, attendant cannot park the car")
@@ -58,32 +55,32 @@ func (a *Attendant) Park(car *Car) error {
 
 // TODO: refactor
 func (a *Attendant) UnPark(car *Car) error {
+	if car == nil {
+		return errors.New("attendant/unpark: car cannot be nil")
+	}
+
 	if !a.checkIsCarParked(car) {
 		return errors.New("attendant/unpark: car is not parked")
 	}
 
 	var err error
-	for _, parkinglot := range a.Parkinglot {
+	for i, parkinglot := range a.Parkinglot {
 		if !parkinglot.isParked(car) {
 			continue
 		}
-		err = parkinglot.unPark(car)
-		a.parkingFull = false
+		err := parkinglot.unPark(car)
+		if err != nil {
+			return err
+		}
+		a.parkingStatuses[i] = false
+		return nil
 	}
 
 	return err
 }
 
-func (a *Attendant) receiveFull() {
-	count := 0
-	for _, parkinglot := range a.Parkinglot {
-		if parkinglot.isFullyFilled() {
-			count++
-		}
-	}
-	if count == len(a.Parkinglot) {
-		a.parkingFull = true
-	}
+func (a *Attendant) receiveFull(i int) {
+	a.parkingStatuses[i] = true
 }
 
 func (a *Attendant) checkIsCarParked(car *Car) bool {

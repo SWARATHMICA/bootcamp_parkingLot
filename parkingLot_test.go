@@ -112,7 +112,7 @@ type mockParkingFullReceiverCounter struct {
 	parkingFullCalledTimes int
 }
 
-func (s *mockParkingFullReceiverCounter) receiveFull() {
+func (s *mockParkingFullReceiverCounter) receiveFull(int) {
 
 	s.parkingFullCalledTimes++
 }
@@ -230,7 +230,7 @@ type mockParkingFullReceiver struct {
 	parkingFull bool
 }
 
-func (s *mockParkingFullReceiver) receiveFull() {
+func (s *mockParkingFullReceiver) receiveFull(int) {
 
 	s.parkingFull = true
 }
@@ -308,7 +308,7 @@ type ReceiveBothNotification struct {
 	notifiedAvailable bool
 }
 
-func (o *ReceiveBothNotification) receiveFull() {
+func (o *ReceiveBothNotification) receiveFull(int) {
 	o.notifiedFull = true
 }
 
