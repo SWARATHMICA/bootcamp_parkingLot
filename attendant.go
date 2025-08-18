@@ -5,9 +5,10 @@ import "errors"
 type Attendant struct {
 	Parkinglot      []*ParkingLot
 	parkingStatuses []bool
+	choice          bool //we have only two modes: true : first parking lot, false : based on distribution
 }
 
-func NewAttendant(parkingLots ...*ParkingLot) (*Attendant, error) {
+func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
 	parkinglotSlice := []*ParkingLot{}
 	for _, parkingLot := range parkingLots {
 		if parkingLot == nil {
@@ -21,6 +22,7 @@ func NewAttendant(parkingLots ...*ParkingLot) (*Attendant, error) {
 	attendant := Attendant{
 		Parkinglot:      parkingLots,
 		parkingStatuses: statuses,
+		choice:          choice,
 	}
 
 	for _, parkinglot := range parkinglotSlice {
