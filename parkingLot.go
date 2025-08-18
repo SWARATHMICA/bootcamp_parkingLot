@@ -18,11 +18,10 @@ type slot struct {
 	occupied bool
 }
 
-// TODO consitency whether pointer or value and why do we choose one over the other?
-func (s slot) isEmpty() bool {
+func (s *slot) isEmpty() bool {
 	return !s.occupied
 }
-func (s slot) isNotEmpty() bool {
+func (s *slot) isNotEmpty() bool {
 	return s.occupied
 }
 
@@ -59,7 +58,7 @@ type Car struct {
 	numberPlate string
 }
 
-func (car1 Car) isEqual(car2 Car) bool {
+func (car1 *Car) isEqual(car2 *Car) bool {
 	return car1.numberPlate == car2.numberPlate
 }
 
@@ -86,7 +85,7 @@ func (p *ParkingLot) park(c *Car) (bool, error) {
 	if c == nil {
 		return false, errors.New("park: car cannot be nil")
 	}
-	if p.isParked(*c) {
+	if p.isParked(c) {
 		return false, errors.New("Car already parked")
 	}
 	for i := 0; i < p.capacity; i++ {
@@ -129,7 +128,7 @@ func (p *ParkingLot) unPark(car *Car) (bool, error) {
 			continue
 		}
 
-		if p.slots[i].car.isEqual(*car) {
+		if p.slots[i].car.isEqual(car) {
 			p.slots[i].free()
 
 			p.isFull = false
@@ -150,13 +149,12 @@ func (p *ParkingLot) notifyAvailableReciever() {
 	}
 }
 
-// TODO inconsistency car is used as a pointer argument at some place and some places its pass by value why?
-func (p *ParkingLot) isParked(car Car) bool {
+func (p *ParkingLot) isParked(car *Car) bool {
 	for _, slot := range p.slots {
 		if slot.isEmpty() {
 			continue
 		}
-		if car.isEqual(*slot.car) {
+		if car.isEqual(slot.car) {
 			return true
 		}
 	}

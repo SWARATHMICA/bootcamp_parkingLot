@@ -107,7 +107,7 @@ func TestAttendantShouldCheckIfCarAlreadyParked(t *testing.T) {
 	parkinglot, _ := NewParkingLot(2)
 	attendant, _ := NewAttendant(parkinglot)
 	attendant.Park(&car)
-	isParked := attendant.checkIsCarParked(car)
+	isParked := attendant.checkIsCarParked(&car)
 	if !isParked {
 		t.Errorf("car is already parked")
 	}
@@ -132,8 +132,8 @@ func TestAttendantShouldCheckCarIsParkedAfterUnpark(t *testing.T) {
 		t.Fatal("car2 should be unparked")
 	}
 
-	isCarParked := attendant.checkIsCarParked(car)
-	isCar2Parked := attendant.checkIsCarParked(car2)
+	isCarParked := attendant.checkIsCarParked(&car)
+	isCar2Parked := attendant.checkIsCarParked(&car2)
 
 	if isCarParked == false {
 		t.Error("car should be parked in parking lot")
@@ -172,7 +172,7 @@ func TestCheckIsCarParkedWhenMultipleParkingLotAvailable(t *testing.T) {
 
 	attendant, _ := NewAttendant(parkinglot1, parkinglot2)
 
-	flag := attendant.checkIsCarParked(car)
+	flag := attendant.checkIsCarParked(&car)
 
 	if flag == false {
 		t.Error("car should be found in parking lot 2")

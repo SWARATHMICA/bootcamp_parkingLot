@@ -36,7 +36,7 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 		return false, errors.New("car cannot be nil")
 	}
 
-	if a.checkIsCarParked(*car) {
+	if a.checkIsCarParked(car) {
 		return false, errors.New("attendant: car already parked")
 	}
 
@@ -53,13 +53,13 @@ func (a *Attendant) Park(car *Car) (bool, error) {
 	return false, errors.New("parking lot is full, attendant cannot park the car")
 }
 func (a *Attendant) UnPark(car *Car) (bool, error) {
-	if !a.checkIsCarParked(*car) {
+	if !a.checkIsCarParked(car) {
 		return false, errors.New("attendant/unpark: car is not parked")
 	}
 	var result bool
 	var err error
 	for _, parkinglot := range a.Parkinglot {
-		if !parkinglot.isParked(*car) {
+		if !parkinglot.isParked(car) {
 			continue
 		}
 		result, err = parkinglot.unPark(car)
@@ -81,7 +81,7 @@ func (a *Attendant) receiveFull() {
 	}
 }
 
-func (a *Attendant) checkIsCarParked(car Car) bool {
+func (a *Attendant) checkIsCarParked(car *Car) bool {
 	for _, parkinglot := range a.Parkinglot {
 		if parkinglot.isParked(car) {
 			return true
