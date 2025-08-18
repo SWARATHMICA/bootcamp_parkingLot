@@ -3,8 +3,9 @@ package parkinglot
 import "errors"
 
 type Attendant struct {
-	Parkinglot  []*ParkingLot
-	parkingFull bool
+	Parkinglot      []*ParkingLot
+	parkingFull     bool
+	parkingStatuses []bool
 }
 
 func NewAttendant(parkingLots ...*ParkingLot) (*Attendant, error) {
@@ -38,8 +39,11 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("attendant: car already parked")
 	}
+	//todo leverage individual parking lots subscription, to directly park in available parking lots
+	// check a.parkingstatuses[0], [1]
+	// do  I need the above boolean statuses ?
 
-	if !a.parkingFull {
+	if !a.parkingFull { //TODO: correct indentation
 		for _, p := range a.Parkinglot {
 			if !p.isFullyFilled() {
 				p.park(car)
@@ -51,6 +55,8 @@ func (a *Attendant) Park(car *Car) error {
 
 	return errors.New("parking lot is full, attendant cannot park the car")
 }
+
+// TODO: refactor
 func (a *Attendant) UnPark(car *Car) error {
 	if !a.checkIsCarParked(car) {
 		return errors.New("attendant/unpark: car is not parked")

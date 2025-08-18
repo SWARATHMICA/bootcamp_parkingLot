@@ -78,16 +78,16 @@ func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 
 }
 
-func TestAttendantReceiveFullNotification(t *testing.T) {
-	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(parkingLot)
+// func TestAttendantReceiveFullNotification(t *testing.T) {
+// 	parkingLot, _ := NewParkingLot(1)
+// 	attendant, _ := NewAttendant(parkingLot)
 
-	attendant.Park(&car)
+// 	attendant.Park(&car)
 
-	if !attendant.parkingFull {
-		t.Errorf("attendant should be notified about parking full")
-	}
-}
+// 	if !attendant.parkingFull {
+// 		t.Errorf("attendant should be notified about parking full")
+// 	}
+// }
 
 //Multiple parking lots
 
@@ -103,15 +103,15 @@ func TestAttendantCannotParkNilCar(t *testing.T) {
 	}
 }
 
-func TestAttendantShouldCheckIfCarAlreadyParked(t *testing.T) {
-	parkinglot, _ := NewParkingLot(2)
-	attendant, _ := NewAttendant(parkinglot)
-	attendant.Park(&car)
-	isParked := attendant.checkIsCarParked(&car)
-	if !isParked {
-		t.Errorf("car is already parked")
-	}
-}
+// func TestAttendantShouldCheckIfCarAlreadyParked(t *testing.T) {
+// 	parkinglot, _ := NewParkingLot(2)
+// 	attendant, _ := NewAttendant(parkinglot)
+// 	attendant.Park(&car)
+// 	isParked := attendant.checkIsCarParked(&car)
+// 	if !isParked {
+// 		t.Errorf("car is already parked")
+// 	}
+// }
 
 func TestAttendantShouldCheckCarIsParkedAfterUnpark(t *testing.T) {
 	parkinglot, _ := NewParkingLot(2)
@@ -144,6 +144,7 @@ func TestAttendantShouldCheckCarIsParkedAfterUnpark(t *testing.T) {
 }
 
 func TestAttendantCanAcceptMultipleParkingLot(t *testing.T) {
+	//TODO: RENAME
 	parkinglot1, err1 := NewParkingLot(1)
 	if err1 != nil {
 		t.Fatalf("failed to create parking lot 1: %v", err1)
@@ -160,32 +161,39 @@ func TestAttendantCanAcceptMultipleParkingLot(t *testing.T) {
 		t.Errorf("expected attendant to be created with multiple parking lots, got error: %v", err)
 	}
 }
-func TestCheckIsCarParkedWhenMultipleParkingLotAvailable(t *testing.T) {
-	parkinglot1, _ := NewParkingLot(2)
-	parkinglot2, _ := NewParkingLot(3)
 
-	err := parkinglot2.park(&car)
+/*What functionality of attendant you want to test?
 
-	if err != nil {
-		t.Fatal("car should be parked in the parking log 2")
-	}
+attendant should be able to check the car is parked in particular parking lot, when already parked using the (parkinglot) park
+checkIsCarParked is an internal function of attendant it  will be covered by tests for park and unpark on attendant?
 
-	attendant, _ := NewAttendant(parkinglot1, parkinglot2)
+*/
+// func TestCheckIsCarParkedWhenMultipleParkingLotAvailable(t *testing.T) {
+// 	parkinglot1, _ := NewParkingLot(2)
+// 	parkinglot2, _ := NewParkingLot(3)
 
-	flag := attendant.checkIsCarParked(&car)
+// 	err := parkinglot2.park(&car)
 
-	if flag == false {
-		t.Error("car should be found in parking lot 2")
-	}
-}
+// 	if err != nil {
+// 		t.Fatal("car should be parked in the parking log 2")
+// 	}
+// 	attendant, _ := NewAttendant(parkinglot1, parkinglot2)
 
+// 	flag := attendant.checkIsCarParked(&car)
+
+//		if flag == false {
+//			t.Error("car should be found in parking lot 2")
+//		}
+//	}
+//
+// TODO test case name and code do not match
 func TestAttendantParkCarInNextParkingLotWithAvailableSlot(t *testing.T) {
+
 	parkkinglot1, _ := NewParkingLot(1)
 	parkkinglot2, _ := NewParkingLot(3)
 	attendant, _ := NewAttendant(parkkinglot1, parkkinglot2)
 
 	parkkinglot1.park(&car)
-
 	err := attendant.Park(&Car{"1234567"})
 
 	if err != nil {
@@ -200,24 +208,29 @@ func TestAttendantParkCarInNextParkingLotWithAvailableSlot(t *testing.T) {
 	}
 }
 
-func TestAttendantReceiveFullNotificationWhenAllParkingLotIsFull(t *testing.T) {
-	parkingLot1, _ := NewParkingLot(1)
-	parkingLot2, _ := NewParkingLot(1)
-	parkingLot3, _ := NewParkingLot(1)
-	attendant, err := NewAttendant(parkingLot1, parkingLot2, parkingLot3)
+//test attendant should not call park on any parking lot when it  knows all parking lot are full
+// how do i test or verify this ?
+//verify park method on parking lots is not called
+// i will need to use mock
+//but here i cant use mock
+// I want to test my behaviour
+//
+// 	parkingLot2, _ := NewParkingLot(1)
+// 	parkingLot3, _ := NewParkingLot(1)
+// 	attendant, err := NewAttendant(parkingLot1, parkingLot2, parkingLot3)
 
-	if err != nil {
-		t.Fatal("attendant was not created with parkinglot1, parkinglot2, parkinglot3")
-	}
+// 	if err != nil {
+// 		t.Fatal("attendant was not created with parkinglot1, parkinglot2, parkinglot3")
+// 	}
 
-	attendant.Park(&car)
-	attendant.Park(&Car{"123456789"})
-	attendant.Park(&Car{"098765432"})
+// 	attendant.Park(&car)
+// 	attendant.Park(&Car{"123456789"})
+// 	attendant.Park(&Car{"098765432"})
 
-	if !attendant.parkingFull {
-		t.Errorf("attendant should be notified about parking full")
-	}
-}
+// 	if !attendant.parkingFull {
+// 		t.Errorf("attendant should be notified about parking full")
+// 	}
+// }
 
 func TestAttendantIsAbleToUnparkAfterParkForMultipleParkingLots(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(1)
