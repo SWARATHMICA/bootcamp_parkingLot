@@ -209,3 +209,27 @@ func TestAttendantfindLeastCarsLot(t *testing.T) {
 		t.Errorf("expected lot2 (fewer cars), got %+v", got)
 	}
 }
+
+func TestAttendantParksInLotWithFewerCars(t *testing.T) {
+
+	parkinglot1, _ := NewParkingLot(2)
+	parkinglot2, _ := NewParkingLot(2)
+	parkinglot3, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(false, parkinglot1, parkinglot2, parkinglot3)
+
+	car1 := &Car{"KA01AA2345"}
+	car2 := &Car{"KA02BB5678"}
+	car3 := &Car{"TN10AA3085"}
+
+	attendant.Park(car1)
+	attendant.Park(car2)
+
+	err := attendant.Park(car3)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if parkinglot3.CarsParkedCount() != 1 {
+		t.Errorf("car3 has to be parked in parkinglot3")
+	}
+}

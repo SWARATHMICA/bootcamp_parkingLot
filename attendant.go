@@ -43,7 +43,13 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("attendant: car already parked")
 	}
-
+	if !a.choice {
+		lot := a.findLeastCarsLot()
+		if lot == nil {
+			return errors.New("parking lot is full, attendant cannot park the car")
+		}
+		return lot.park(car)
+	}
 	for i, p := range a.Parkinglots {
 		if a.parkingStatuses[i] {
 			continue
