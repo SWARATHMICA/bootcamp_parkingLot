@@ -190,3 +190,22 @@ func TestAttendantIsAbleToUnparkAfterParkForMultipleParkingLots(t *testing.T) {
 	}
 
 }
+
+func TestAttendantfindLeastCarsLot(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(2)
+	parkinglot2, _ := NewParkingLot(2)
+	parkinglot3, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(true, parkinglot1, parkinglot2, parkinglot3)
+	car3 := Car{"KK10AA2369"}
+	car2 := Car{"KK10AA2345"}
+
+	attendant.Park(&car)
+	attendant.Park(&car2)
+	attendant.Park(&car3)
+
+	got := attendant.findLeastCarsLot()
+
+	if got != parkinglot3 {
+		t.Errorf("expected lot2 (fewer cars), got %+v", got)
+	}
+}

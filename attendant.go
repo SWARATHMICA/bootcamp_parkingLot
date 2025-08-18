@@ -1,6 +1,9 @@
 package parkinglot
 
-import "errors"
+import (
+	"errors"
+	"math"
+)
 
 type Attendant struct {
 	Parkinglots     []*ParkingLot
@@ -87,4 +90,22 @@ func (a *Attendant) checkIsCarParked(car *Car) bool {
 		}
 	}
 	return false
+}
+
+func (a *Attendant) findLeastCarsLot() *ParkingLot {
+	var targetLot *ParkingLot
+	minCars := math.MaxInt
+
+	for i, lot := range a.Parkinglots {
+
+		if a.parkingStatuses[i] {
+			continue
+		}
+		if lot.CarsParkedCount() < minCars {
+			minCars = lot.CarsParkedCount()
+			targetLot = lot
+		}
+
+	}
+	return targetLot
 }
