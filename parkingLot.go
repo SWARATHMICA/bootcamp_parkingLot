@@ -70,9 +70,6 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 	for i := 0; i < capacity; i++ {
 		newLot := slot{
 			id: i + 1,
-			//TODO i dont know may be idiomatic go please check
-			car:      nil,
-			occupied: false,
 		}
 		lots = append(lots, newLot)
 	}
