@@ -42,8 +42,8 @@ func TestParkCar(t *testing.T) {
 	car := Car{
 		numberPlate: "KJ-09-AK-123",
 	}
-	parked, _ := parkingLot.park(&car)
-	if !parked {
+	err := parkingLot.park(&car)
+	if err != nil {
 		t.Errorf("Vehicle not parked")
 	}
 }
@@ -83,9 +83,9 @@ func TestCheckIfLotIsEmptyBeforeParking(t *testing.T) {
 		numberPlate: "KK-09-AK-2341",
 	}
 	p.park(car1)
-	result, _ := p.park(car2)
+	err := p.park(car2)
 
-	if result {
+	if err == nil {
 		t.Errorf("Cannot park car since no slots are empty")
 	}
 
@@ -100,7 +100,7 @@ func TestCheckIfParkingLotIsFull(t *testing.T) {
 	}
 	p, _ := NewParkingLot(1)
 	p.park(car1)
-	_, err := p.park(car2)
+	err := p.park(car2)
 
 	if err == nil {
 		t.Errorf("ParkingLot is full")
@@ -134,17 +134,17 @@ func TestCheckIfFullReceiverGetsNotifiedWhenCarParkedAfterUnpark(t *testing.T) {
 	p, _ := NewParkingLot(3)
 	p.OnFull(s)
 
-	_, err := p.park(car1)
+	err := p.park(car1)
 	if err != nil {
 		t.Fatal("car1 should be parked")
 	}
 
-	_, err = p.park(car2)
+	err = p.park(car2)
 	if err != nil {
 		t.Fatal("car2 should be parked")
 	}
 
-	_, err = p.park(car3)
+	err = p.park(car3)
 	if err != nil {
 		t.Fatal("car3 should be parked")
 	}
@@ -152,12 +152,12 @@ func TestCheckIfFullReceiverGetsNotifiedWhenCarParkedAfterUnpark(t *testing.T) {
 		t.Fatalf("parking full reciver should have been called once but was %d", s.parkingFullCalledTimes)
 	}
 
-	_, err = p.unPark(car1)
+	err = p.unPark(car1)
 	if err != nil {
 		t.Fatal("car3 should be parked")
 	}
 
-	_, err = p.park(car1)
+	err = p.park(car1)
 	if err != nil {
 		t.Fatal("car1 should be parked")
 	}
@@ -175,8 +175,8 @@ func TestUnparkCar(t *testing.T) {
 	}
 	p.park(car)
 
-	result, _ := p.unPark(car)
-	if !result {
+	err := p.unPark(car)
+	if err != nil {
 		t.Errorf("Car not unparked")
 
 	}
@@ -189,7 +189,7 @@ func TestUnparkCarNotFound(t *testing.T) {
 	}
 	p.park(car)
 
-	_, err := p.unPark(car)
+	err := p.unPark(car)
 	if err != nil {
 		t.Errorf("Car not found")
 	}
@@ -219,7 +219,7 @@ func TestCheckIfCarAlreadyParked(t *testing.T) {
 		numberPlate: numberPlate,
 	}
 	p.park(car1)
-	_, err := p.park(car2)
+	err := p.park(car2)
 	if err == nil {
 		t.Errorf("Car is already parked")
 	}
@@ -366,7 +366,7 @@ func TestParkAfterUnparkForSingleSlot(t *testing.T) {
 	parkinglot.park(&car)
 	parkinglot.unPark(&car)
 
-	_, err := parkinglot.park(&car)
+	err := parkinglot.park(&car)
 
 	if err != nil {
 		t.Errorf("car should park after nupark")
@@ -377,7 +377,7 @@ func TestCannotParkNil(t *testing.T) {
 
 	parkinglot, _ := NewParkingLot(1)
 
-	_, err := parkinglot.park(nil)
+	err := parkinglot.park(nil)
 
 	if err == nil {
 		t.Errorf("car to be parked cannot be nil")
@@ -389,7 +389,7 @@ func TestCannotUnparkNil(t *testing.T) {
 
 	parkinglot, _ := NewParkingLot(1)
 
-	_, err := parkinglot.unPark(nil)
+	err := parkinglot.unPark(nil)
 
 	if err == nil {
 		t.Error("nil car cannot be unparked")
@@ -399,20 +399,20 @@ func TestCarShouldGetParkedAferUnpark(t *testing.T) {
 	parkinglot, _ := NewParkingLot(2)
 	car2 := Car{"AA10AK2345"}
 
-	_, err1 := parkinglot.park(&car)
+	err1 := parkinglot.park(&car)
 	if err1 != nil {
 		t.Fatal("car should be parked")
 	}
-	_, err1 = parkinglot.park(&car2)
+	err1 = parkinglot.park(&car2)
 	if err1 != nil {
 		t.Fatal("car2 should be parked")
 	}
 
-	_, err1 = parkinglot.unPark(&car2)
+	err1 = parkinglot.unPark(&car2)
 	if err1 != nil {
 		t.Fatal("car2 should be unparked")
 	}
-	_, err := parkinglot.park(&car2)
+	err := parkinglot.park(&car2)
 
 	if err != nil {
 		t.Fatalf("car2 should be parked after unpark : %v", err)
