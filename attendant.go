@@ -3,7 +3,7 @@ package parkinglot
 import "errors"
 
 type Attendant struct {
-	Parkinglot      []*ParkingLot
+	Parkinglots     []*ParkingLot
 	parkingStatuses []bool
 	choice          bool //we have only two modes: true : first parking lot, false : based on distribution
 }
@@ -20,7 +20,7 @@ func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
 
 	statuses := make([]bool, len(parkingLots))
 	attendant := Attendant{
-		Parkinglot:      parkingLots,
+		Parkinglots:     parkingLots,
 		parkingStatuses: statuses,
 		choice:          choice,
 	}
@@ -41,7 +41,7 @@ func (a *Attendant) Park(car *Car) error {
 		return errors.New("attendant: car already parked")
 	}
 
-	for i, p := range a.Parkinglot {
+	for i, p := range a.Parkinglots {
 		if a.parkingStatuses[i] {
 			continue
 		}
@@ -61,7 +61,7 @@ func (a *Attendant) UnPark(car *Car) error {
 	}
 
 	var err error
-	for i, parkinglot := range a.Parkinglot {
+	for i, parkinglot := range a.Parkinglots {
 		if !parkinglot.isParked(car) {
 			continue
 		}
@@ -81,7 +81,7 @@ func (a *Attendant) receiveFull(i int) {
 }
 
 func (a *Attendant) checkIsCarParked(car *Car) bool {
-	for _, parkinglot := range a.Parkinglot {
+	for _, parkinglot := range a.Parkinglots {
 		if parkinglot.isParked(car) {
 			return true
 		}
