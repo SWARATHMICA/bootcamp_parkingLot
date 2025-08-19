@@ -233,3 +233,50 @@ func TestAttendantParksInLotWithFewerCars(t *testing.T) {
 		t.Errorf("car3 has to be parked in parkinglot3")
 	}
 }
+
+func TestComplexAttendantParksInAccordingToDistributionAfterUnpark(t *testing.T) {
+	lot1, _ := NewParkingLot(2)
+	lot2, _ := NewParkingLot(2)
+	car1 := &Car{"car1"}
+	car2 := &Car{"car2"}
+	car3 := &Car{"car3"}
+	car4 := &Car{"car4"}
+
+	simpleAttendant, _ := NewAttendant(true, lot1, lot2)
+	complexAttendant, _ := NewAttendant(false, lot1, lot2)
+
+	err := simpleAttendant.Park(car1)
+	if err != nil {
+		t.Fatalf("park setup failed for car1 %v", err)
+	}
+
+	err = simpleAttendant.Park(car2)
+	if err != nil {
+		t.Fatalf("park stup failed for car2 %v", err)
+	}
+
+	if car1.isEqual(lot1.slots[0].car) == false {
+		t.Fatal("attendant should park in lot1")
+	}
+	err = complexAttendant.Park(car3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = simpleAttendant.UnPark(car1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = simpleAttendant.UnPark(car2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = complexAttendant.Park(car4)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if car4.isEqual(lot1.slots[0].car) == false {
+		t.Fatalf("car should have been parked in first slot but was parked in lot 2 %v", lot2.slots[0].car)
+	}
+}

@@ -5,11 +5,11 @@ import (
 )
 
 type ParkingFullReceiver interface {
-	receiveFull(int)
+	receiveFull(*ParkingLot)
 }
 
 type ParkingAvailableReceiver interface {
-	receiveAvailable()
+	receiveAvailable(*ParkingLot)
 }
 
 type slot struct {
@@ -133,7 +133,7 @@ func (p *ParkingLot) unPark(car *Car) error {
 
 func (p *ParkingLot) notifyAvailableReciever() {
 	if p.availableSubscribers != nil {
-		p.availableSubscribers.receiveAvailable()
+		p.availableSubscribers.receiveAvailable(p)
 	}
 }
 
@@ -150,8 +150,8 @@ func (p *ParkingLot) isParked(car *Car) bool {
 }
 
 func (p *ParkingLot) notifyReceiver() {
-	for i, r := range p.fullSubscribers {
-		r.receiveFull(i)
+	for _, r := range p.fullSubscribers {
+		r.receiveFull(p)
 	}
 
 }

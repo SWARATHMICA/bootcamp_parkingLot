@@ -30,6 +30,7 @@ func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
 
 	for _, parkinglot := range parkinglotSlice {
 		parkinglot.OnFull(&attendant)
+		parkinglot.OnAvailable(&attendant)
 	}
 
 	return &attendant, nil
@@ -85,8 +86,14 @@ func (a *Attendant) UnPark(car *Car) error {
 	return err
 }
 
-func (a *Attendant) receiveFull(i int) {
-	a.parkingStatuses[i] = true
+func (a *Attendant) receiveFull(p *ParkingLot) {
+	for i, l := range a.Parkinglots {
+		if l == p {
+			a.parkingStatuses[i] = true
+			break
+		}
+	}
+
 }
 
 func (a *Attendant) checkIsCarParked(car *Car) bool {
@@ -114,4 +121,13 @@ func (a *Attendant) findLeastCarsLot() *ParkingLot {
 
 	}
 	return targetLot
+}
+
+func (a *Attendant) receiveAvailable(p *ParkingLot) {
+	for i, l := range a.Parkinglots {
+		if l == p {
+			a.parkingStatuses[i] = false
+			break
+		}
+	}
 }
