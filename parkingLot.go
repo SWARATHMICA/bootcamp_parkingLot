@@ -120,10 +120,10 @@ func (p *ParkingLot) unPark(car *Car) error {
 		if p.slots[i].car.isEqual(car) {
 			p.slots[i].free()
 
-			//TODO: check coupling and correct indentation
-			if !p.isFullyFilled() {
-				p.notifyAvailableReciever()
+			if p.isFullyFilled() {
+				continue
 			}
+			p.notifyAvailableReciever()
 			return nil
 		}
 
