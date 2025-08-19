@@ -29,8 +29,8 @@ func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
 	}
 
 	for _, parkinglot := range parkinglotSlice {
-		parkinglot.OnFull(&attendant)
-		parkinglot.OnAvailable(&attendant)
+		parkinglot.addParkingFullReceiver(&attendant)
+		parkinglot.setParkingAvailableReceiver(&attendant)
 	}
 
 	return &attendant, nil
