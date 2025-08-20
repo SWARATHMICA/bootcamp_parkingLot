@@ -5,13 +5,20 @@ import (
 	"math"
 )
 
+type ParkingType string
+
+const (
+	SimpleParking ParkingType = "simpleParking"
+	EvenParking   ParkingType = "evenParking"
+)
+
 type Attendant struct {
 	Parkinglots     []*ParkingLot
 	parkingStatuses []bool
-	choice          bool //we have only two modes: true : first parking lot, false : based on distribution
+	choice          ParkingType
 }
 
-func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
+func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, error) {
 	parkinglotSlice := []*ParkingLot{}
 	for _, parkingLot := range parkingLots {
 		if parkingLot == nil {
@@ -44,7 +51,7 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("parkinglot:park (by attendant): car already parked")
 	}
-	if !a.choice {
+	if a.choice == EvenParking {
 		lot := a.findLeastCarsLot()
 		if lot == nil {
 			return errors.New("parkinglot:park (choice 2):parking lot is full, attendant cannot park the car")
