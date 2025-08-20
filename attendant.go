@@ -157,7 +157,7 @@ func (a *Attendant) findLeastCarsLot() *ParkingLot {
 		}
 
 	}
-	return targetLot
+	return targetLot //TODO: CHECK nil; doubt: default value is nil
 }
 
 func (a *Attendant) receiveAvailable(p *ParkingLot) {
