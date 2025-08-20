@@ -60,7 +60,7 @@ func (car1 *Car) isEqual(car2 *Car) bool {
 
 func NewParkingLot(capacity int) (*ParkingLot, error) {
 	if capacity < 1 {
-		return nil, errors.New("cannot create parking lot with capacity less than 1")
+		return nil, errors.New("parkinglot: NewParkingLot: cannot create parking lot with capacity less than 1")
 	}
 	lots := make([]slot, 0, capacity)
 	for i := 0; i < capacity; i++ {
@@ -75,10 +75,10 @@ func NewParkingLot(capacity int) (*ParkingLot, error) {
 
 func (p *ParkingLot) park(c *Car) error {
 	if c == nil {
-		return errors.New("park: car cannot be nil")
+		return errors.New("parkinglot: park: car cannot be nil")
 	}
 	if p.isParked(c) {
-		return errors.New("Car already parked")
+		return errors.New("parkinglot: park: car already parked")
 	}
 	for i := 0; i < p.capacity; i++ {
 		if p.slots[i].isNotEmpty() {
@@ -95,7 +95,7 @@ func (p *ParkingLot) park(c *Car) error {
 		return nil
 
 	}
-	return errors.New("ParkingLot is full")
+	return errors.New("parkinglot: park: parkingLot is full")
 
 }
 
@@ -110,7 +110,7 @@ func (p *ParkingLot) isFullyFilled() bool {
 
 func (p *ParkingLot) unPark(car *Car) error {
 	if car == nil {
-		return errors.New("unpark: car cannot be nil")
+		return errors.New("parkinglot: unpark: car cannot be nil")
 	}
 	for i := 0; i < p.capacity; i++ {
 		if p.slots[i].isEmpty() {
@@ -128,7 +128,7 @@ func (p *ParkingLot) unPark(car *Car) error {
 		}
 
 	}
-	return errors.New("Car is not found in the parking lot")
+	return errors.New("parkinglot: unpark: car is not found in the parking lot")
 }
 
 func (p *ParkingLot) notifyAvailableReciever() {

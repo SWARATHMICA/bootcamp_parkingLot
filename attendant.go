@@ -15,7 +15,7 @@ func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
 	parkinglotSlice := []*ParkingLot{}
 	for _, parkingLot := range parkingLots {
 		if parkingLot == nil {
-			return nil, errors.New("attendant cannot have nil parkinglot")
+			return nil, errors.New("parkinglot:NewAttendant:attendant cannot have nil parkinglot")
 		}
 	}
 
@@ -38,16 +38,16 @@ func NewAttendant(choice bool, parkingLots ...*ParkingLot) (*Attendant, error) {
 
 func (a *Attendant) Park(car *Car) error {
 	if car == nil {
-		return errors.New("car cannot be nil")
+		return errors.New("parkinglot:park (by attendant):car cannot be nil")
 	}
 
 	if a.checkIsCarParked(car) {
-		return errors.New("attendant: car already parked")
+		return errors.New("parkinglot:park (by attendant): car already parked")
 	}
 	if !a.choice {
 		lot := a.findLeastCarsLot()
 		if lot == nil {
-			return errors.New("parking lot is full, attendant cannot park the car")
+			return errors.New("parkinglot:park (choice 2):parking lot is full, attendant cannot park the car")
 		}
 		return lot.park(car)
 	}
@@ -62,12 +62,12 @@ func (a *Attendant) Park(car *Car) error {
 		return err
 	}
 
-	return errors.New("parking lot is full, attendant cannot park the car")
+	return errors.New("parkinglot: park (choice 1):parking lot is full, attendant cannot park the car")
 }
 
 func (a *Attendant) UnPark(car *Car) error {
 	if !a.checkIsCarParked(car) {
-		return errors.New("attendant/unpark: car is not parked")
+		return errors.New("parkinglot:unpark (by attendant): car is not parked")
 	}
 
 	var err error
