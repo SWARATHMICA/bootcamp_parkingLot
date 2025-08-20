@@ -7,6 +7,8 @@ import (
 
 type ParkingType string
 
+type choice func(*Attendant) *ParkingLot
+
 const (
 	SimpleParking      ParkingType = "simpleParking"
 	EvenParking        ParkingType = "evenParking"
@@ -16,7 +18,7 @@ const (
 type Attendant struct {
 	Parkinglots     []*ParkingLot
 	parkingStatuses []bool
-	choice          ParkingType
+	lotchoice       choice
 }
 
 func (a *Attendant) findLotWithMaxCapacity() *ParkingLot {
@@ -45,7 +47,6 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 	attendant := Attendant{
 		Parkinglots:     parkingLots,
 		parkingStatuses: statuses,
-		choice:          choice,
 	}
 
 	for _, parkinglot := range parkinglotSlice {
@@ -53,18 +54,18 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 		parkinglot.setParkingAvailableReceiver(&attendant)
 	}
 
+	switch choice {
+	case EvenParking:
+		attendant.lotchoice = (*Attendant).findLeastCarsLot
+	case MaxCapacityParking:
+		attendant.lotchoice = (*Attendant).findLotWithMaxCapacity
+	case SimpleParking:
+		attendant.lotchoice = (*Attendant).firstemptylot
+	default:
+		return nil, errors.New("unknown parking type")
+	}
+
 	return &attendant, nil
-}
-
-func (a *Attendant) lotBasedOnChoice() *ParkingLot {
-
-	if a.choice == EvenParking {
-		return a.findLeastCarsLot()
-	}
-	if a.choice == MaxCapacityParking {
-		return a.findLotWithMaxCapacity()
-	}
-	return a.firstemptylot()
 }
 
 func (a *Attendant) firstemptylot() *ParkingLot {
@@ -85,7 +86,7 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("parkinglot:park (by attendant): car already parked")
 	}
-	lot := a.lotBasedOnChoice()
+	lot := a.lotchoice(a)
 	if lot == nil {
 		return errors.New("parkinglot: park (by attendant): all parkinglots are full")
 	}
