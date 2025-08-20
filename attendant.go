@@ -23,7 +23,7 @@ func (a *Attendant) findLotWithMaxCapacity() *ParkingLot {
 	maxCapacity := 0
 	var parkingLotWithMaxCapacity *ParkingLot
 	for _, p := range a.Parkinglots {
-		if p.capacity > maxCapacity {
+		if !p.isFullyFilled() && p.capacity > maxCapacity {
 			maxCapacity = p.capacity
 			parkingLotWithMaxCapacity = p
 		}

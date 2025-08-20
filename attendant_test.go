@@ -340,3 +340,30 @@ func TestCombinationOfAllThreeTypesOfAttendants(t *testing.T) {
 	}
 
 }
+
+func TestAttendantMaxCapacityChoosesOtherLotWhenLargestIsFull(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(MaxCapacityParking, parkinglot1, parkinglot2)
+
+	car1 := &Car{"KK10AA2345"}
+	car2 := &Car{"TN10AA3085"}
+	car3 := &Car{"TN10AB2555"}
+
+	err := attendant.Park(car1)
+	if err != nil {
+		t.Fatalf("car1 should be parked: %v", err)
+	}
+
+	attendant.Park(car2)
+
+	if parkinglot2.CarsParkedCount() != 2 {
+		t.Fatalf("car2 should be parked in parkinglot2")
+	}
+
+	attendant.Park(car3)
+
+	if !parkinglot1.slots[0].car.isEqual(car3) {
+		t.Errorf("car3 has to be parked in parkinglot1")
+	}
+}
