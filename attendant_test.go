@@ -4,7 +4,7 @@ import "testing"
 
 func TestCreateNewAttendant(t *testing.T) {
 	parkinglog, _ := NewParkingLot(1)
-	_, err := NewAttendant(SimpleParking, parkinglog)
+	_, err := NewAttendant(ParkAtFirstEmptyLot, parkinglog)
 
 	if err != nil {
 		t.Error("new attendant should be created")
@@ -12,7 +12,7 @@ func TestCreateNewAttendant(t *testing.T) {
 }
 
 func TestAttedantCannotBeCreatedWithNilParkingLot(t *testing.T) {
-	_, err := NewAttendant(SimpleParking, nil)
+	_, err := NewAttendant(ParkAtFirstEmptyLot, nil)
 
 	const expectedError = "parkinglot:NewAttendant:attendant cannot have nil parkinglot"
 
@@ -23,7 +23,7 @@ func TestAttedantCannotBeCreatedWithNilParkingLot(t *testing.T) {
 
 func TestParkCarByAttendant(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(SimpleParking, parkingLot)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkingLot)
 
 	err := attendant.Park(&car)
 
@@ -34,7 +34,7 @@ func TestParkCarByAttendant(t *testing.T) {
 
 func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(SimpleParking, parkingLot)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkingLot)
 
 	expectedError := "parkinglot: park (by attendant): all parkinglots are full"
 
@@ -49,7 +49,7 @@ func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 
 func TestUnParkCarByAttendant(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(SimpleParking, parkingLot)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkingLot)
 
 	attendant.Park(&car)
 	err := attendant.UnPark(&car)
@@ -61,7 +61,7 @@ func TestUnParkCarByAttendant(t *testing.T) {
 
 func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(SimpleParking, parkingLot)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkingLot)
 
 	//park the car
 	attendant.Park(&car)
@@ -82,7 +82,7 @@ func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 
 func TestAttendantCannotParkNilCar(t *testing.T) {
 	parkinglot, _ := NewParkingLot(2)
-	attendant, _ := NewAttendant(SimpleParking, parkinglot)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot)
 
 	err := attendant.Park(nil)
 	expectedError := "parkinglot:park (by attendant):car cannot be nil"
@@ -94,7 +94,7 @@ func TestAttendantCannotParkNilCar(t *testing.T) {
 
 func TestAttendantShouldCheckCarIsParkedAfterUnpark(t *testing.T) {
 	parkinglot, _ := NewParkingLot(2)
-	attendant, _ := NewAttendant(SimpleParking, parkinglot)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot)
 	car2 := Car{"UM-12-TK-1234"}
 
 	err := attendant.Park(&car)
@@ -133,7 +133,7 @@ func TestAttendantCanManageMultipleParkingLots(t *testing.T) {
 		t.Fatalf("failed to create parking lot 2: %v", err2)
 	}
 
-	_, err := NewAttendant(SimpleParking, parkinglot1, parkinglot2)
+	_, err := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2)
 
 	if err != nil {
 		t.Errorf("expected attendant to be created with multiple parking lots, got error: %v", err)
@@ -144,7 +144,7 @@ func TestAttendantParkCarInNextParkingLotWithAvailableSlot(t *testing.T) {
 
 	parkinglot1, _ := NewParkingLot(1)
 	parkinglot2, _ := NewParkingLot(3)
-	attendant, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2)
 
 	parkinglot1.park(&car)
 	car2 := Car{"1234567"}
@@ -165,7 +165,7 @@ func TestAttendantIsAbleToUnparkAfterParkForMultipleParkingLots(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(1)
 	parkinglot2, _ := NewParkingLot(2)
 	parkinglot3, _ := NewParkingLot(1)
-	attendant, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2, parkinglot3)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2, parkinglot3)
 
 	err := parkinglot1.park(&car)
 	if err != nil {
@@ -195,7 +195,7 @@ func TestAttendantfindLeastCarsLot(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(2)
 	parkinglot2, _ := NewParkingLot(2)
 	parkinglot3, _ := NewParkingLot(2)
-	attendant, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2, parkinglot3)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2, parkinglot3)
 	car3 := Car{"KK10AA2369"}
 	car2 := Car{"KK10AA2345"}
 
@@ -242,7 +242,7 @@ func TestComplexAttendantParksInAccordingToDistributionAfterUnpark(t *testing.T)
 	car3 := &Car{"car3"}
 	car4 := &Car{"car4"}
 
-	simpleAttendant, _ := NewAttendant(SimpleParking, lot1, lot2)
+	simpleAttendant, _ := NewAttendant(ParkAtFirstEmptyLot, lot1, lot2)
 	complexAttendant, _ := NewAttendant(EvenParking, lot1, lot2)
 
 	err := simpleAttendant.Park(car1)
@@ -281,7 +281,7 @@ func TestComplexAttendantParksInAccordingToDistributionAfterUnpark(t *testing.T)
 func TestAttendantfindLotWithMaxCapacity(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(2)
 	parkinglot2, _ := NewParkingLot(3)
-	attendant, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2)
 
 	lotWithMaxCapacity := attendant.findLotWithMaxCapacity()
 
@@ -312,7 +312,7 @@ func TestCombinationOfAllThreeTypesOfAttendants(t *testing.T) {
 	parkinglot2, _ := NewParkingLot(2)
 	parkinglot3, _ := NewParkingLot(3)
 
-	attendantSimple, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2, parkinglot3)
+	attendantSimple, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2, parkinglot3)
 	attendantEven, _ := NewAttendant(EvenParking, parkinglot1, parkinglot2, parkinglot3)
 	attendantMax, _ := NewAttendant(MaxCapacityParking, parkinglot1, parkinglot2, parkinglot3)
 
