@@ -18,6 +18,18 @@ type Attendant struct {
 	choice          ParkingType
 }
 
+func (a *Attendant) findLotWithMaxCapacity() *ParkingLot {
+	maxCapacity := 0
+	var parkingLotWithMaxCapacity *ParkingLot
+	for _, p := range a.Parkinglots {
+		if p.capacity > maxCapacity {
+			maxCapacity = p.capacity
+			parkingLotWithMaxCapacity = p
+		}
+	}
+	return parkingLotWithMaxCapacity
+}
+
 func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, error) {
 	parkinglotSlice := []*ParkingLot{}
 	for _, parkingLot := range parkingLots {

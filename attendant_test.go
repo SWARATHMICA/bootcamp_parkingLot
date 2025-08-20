@@ -280,3 +280,16 @@ func TestComplexAttendantParksInAccordingToDistributionAfterUnpark(t *testing.T)
 		t.Fatalf("car should have been parked in first slot but was parked in lot 2 %v", lot2.slots[0].car)
 	}
 }
+
+func TestAttendantfindLotWithMaxCapacity(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(2)
+	parkinglot2, _ := NewParkingLot(3)
+	attendant, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2)
+
+	lotWithMaxCapacity := attendant.findLotWithMaxCapacity()
+
+	if lotWithMaxCapacity.capacity != 3 {
+		t.Errorf("parkinglot2 has maximum capacity of 3")
+	}
+
+}
