@@ -306,6 +306,37 @@ func TestAttendantParksInParkingLotWithMaximumCapacity(t *testing.T) {
 	attendant.Park(car2)
 
 	if parkinglot2.CarsParkedCount() != 2 {
-		t.Errorf("both cars should be parked in parkinglot2")
+		t.Errorf("both cars should be parked in park")
 	}
+}
+
+func TestCombinationOfAllThreeTypesOfAttendants(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(2)
+	parkinglot3, _ := NewParkingLot(3)
+
+	attendantSimple, _ := NewAttendant(SimpleParking, parkinglot1, parkinglot2, parkinglot3)
+	attendantEven, _ := NewAttendant(EvenParking, parkinglot1, parkinglot2, parkinglot3)
+	attendantMax, _ := NewAttendant(MaxCapacityParking, parkinglot1, parkinglot2, parkinglot3)
+
+	car1 := &Car{"KA01AA2345"}
+	car2 := &Car{"KA02BB5678"}
+	car3 := &Car{"TN10AA3085"}
+
+	attendantSimple.Park(car1)
+	attendantMax.Park(car2)
+	attendantEven.Park(car3)
+
+	if !parkinglot1.slots[0].car.isEqual(car1) {
+		t.Errorf("car1 should be parked in parkinglot1 by simple attendant")
+	}
+
+	if !parkinglot2.slots[0].car.isEqual(car3) {
+		t.Errorf("car1 should be parked in parkinglot1 by simple attendant")
+	}
+
+	if !parkinglot3.slots[0].car.isEqual(car2) {
+		t.Errorf("car1 should be parked in parkinglot1 by simple attendant")
+	}
+
 }
