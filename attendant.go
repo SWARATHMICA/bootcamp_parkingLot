@@ -54,16 +54,23 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 		parkinglot.setParkingAvailableReceiver(&attendant)
 	}
 
+	var lot choosenLot
+
 	switch choice {
+
 	case EvenParking:
-		attendant.lotchoice = (*Attendant).findLeastCarsLot
+		lot = (*Attendant).findLeastCarsLot
+
 	case MaxCapacityParking:
-		attendant.lotchoice = (*Attendant).findLotWithMaxCapacity
+		lot = (*Attendant).findLotWithMaxCapacity
+
 	case SimpleParking:
-		attendant.lotchoice = (*Attendant).firstemptylot
+		lot = (*Attendant).firstemptylot
+
 	default:
 		return nil, errors.New("unknown parking type")
 	}
+	attendant.lotchoice = lot
 
 	return &attendant, nil
 }
