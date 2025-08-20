@@ -7,7 +7,7 @@ import (
 
 type ParkingType string
 
-type choice func(*Attendant) *ParkingLot
+type choosenLot func(*Attendant) *ParkingLot
 
 const (
 	SimpleParking      ParkingType = "simpleParking"
@@ -18,7 +18,7 @@ const (
 type Attendant struct {
 	Parkinglots     []*ParkingLot
 	parkingStatuses []bool
-	lotchoice       choice
+	lotchoice       choosenLot
 }
 
 func (a *Attendant) findLotWithMaxCapacity() *ParkingLot {
