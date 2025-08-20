@@ -14,7 +14,7 @@ func TestCreateNewAttendant(t *testing.T) {
 func TestAttedantCannotBeCreatedWithNilParkingLot(t *testing.T) {
 	_, err := NewAttendant(ParkAtFirstEmptyLot, nil)
 
-	const expectedError = "parkinglot:NewAttendant:attendant cannot have nil parkinglot"
+	const expectedError = "parkinglot: NewAttendant: attendant cannot have nil parkinglot"
 
 	if err.Error() != expectedError {
 		t.Error("attendant should not create with nil parking lot")
@@ -85,7 +85,7 @@ func TestAttendantCannotParkNilCar(t *testing.T) {
 	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot)
 
 	err := attendant.Park(nil)
-	expectedError := "parkinglot:park (by attendant):car cannot be nil"
+	expectedError := "parkinglot: park (by attendant): car cannot be nil"
 
 	if err.Error() != expectedError {
 		t.Errorf("attendant cannot park nil car")

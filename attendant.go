@@ -37,7 +37,7 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 	parkinglotSlice := []*ParkingLot{}
 	for _, parkingLot := range parkingLots {
 		if parkingLot == nil {
-			return nil, errors.New("parkinglot:NewAttendant:attendant cannot have nil parkinglot")
+			return nil, errors.New("parkinglot: NewAttendant: attendant cannot have nil parkinglot")
 		}
 	}
 
@@ -87,11 +87,11 @@ func (a *Attendant) firstemptylot() *ParkingLot {
 
 func (a *Attendant) Park(car *Car) error {
 	if car == nil {
-		return errors.New("parkinglot:park (by attendant):car cannot be nil")
+		return errors.New("parkinglot: park (by attendant): car cannot be nil")
 	}
 
 	if a.checkIsCarParked(car) {
-		return errors.New("parkinglot:park (by attendant): car already parked")
+		return errors.New("parkinglot: park (by attendant): car already parked")
 	}
 	lot := a.lotchoice(a)
 	if lot == nil {
@@ -104,7 +104,7 @@ func (a *Attendant) Park(car *Car) error {
 
 func (a *Attendant) UnPark(car *Car) error {
 	if !a.checkIsCarParked(car) {
-		return errors.New("parkinglot:unpark (by attendant): car is not parked")
+		return errors.New("parkinglot: unpark (by attendant): car is not parked")
 	}
 
 	var err error
