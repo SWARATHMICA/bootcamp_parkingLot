@@ -433,3 +433,17 @@ func TestCarsParkedCount(t *testing.T) {
 	}
 
 }
+
+func TestCarIsEqualCannotCompareNilValues(t *testing.T) {
+	parkinglot, _ := NewParkingLot(2)
+
+	err := parkinglot.park(&car)
+	if err != nil {
+		t.Fatal("car should pe parked in parkinglot")
+	}
+
+	if parkinglot.slots[0].car.isEqual(nil) {
+		t.Error("both cars sould not be equal")
+	}
+
+}

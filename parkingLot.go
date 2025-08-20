@@ -55,6 +55,9 @@ type Car struct {
 }
 
 func (car1 *Car) isEqual(car2 *Car) bool {
+	if car1 == nil || car2 == nil {
+		return false
+	}
 	return car1.numberPlate == car2.numberPlate
 }
 
