@@ -121,12 +121,12 @@ func (p *ParkingLot) unPark(car *Car) error {
 		}
 
 		if p.slots[i].car.isEqual(car) {
-			p.slots[i].free()
 
 			if p.isFullyFilled() {
-				continue
+				p.notifyAvailableReciever()
+
 			}
-			p.notifyAvailableReciever()
+			p.slots[i].free()
 			return nil
 		}
 

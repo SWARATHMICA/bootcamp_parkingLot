@@ -1,8 +1,6 @@
 package parkinglot
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestCreateLot(t *testing.T) {
 	firstLot := &slot{
@@ -272,6 +270,21 @@ func TestSingleRecieverNotifiedParkingAvailable(t *testing.T) {
 
 	if !parkingAvailableReceiver.receiveCalled {
 		t.Errorf("Receive Function not called")
+	}
+}
+
+func TestReceiverNotNotifiedWhenLotNotFull(t *testing.T) {
+	p, _ := NewParkingLot(2)
+	receiver := mockParkingAvailableReceiver{}
+	p.setParkingAvailableReceiver(&receiver)
+
+	car1 := &Car{"KK10AA1234"}
+
+	p.park(car1)
+	p.unPark(car1)
+
+	if receiver.receiveCalled {
+		t.Errorf("receiver should not be notified when lot is not full")
 	}
 }
 
