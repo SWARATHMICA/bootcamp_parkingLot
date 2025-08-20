@@ -36,7 +36,7 @@ func TestAttendantCannotParkWhenParkingFull(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(SimpleParking, parkingLot)
 
-	expectedError := "parkinglot: park (choice 1):parking lot is full, attendant cannot park the car"
+	expectedError := "parkinglot: park (by attendant): all parkinglots are full"
 
 	attendant.Park(&Car{"KK10AA1234"})
 

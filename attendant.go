@@ -56,6 +56,23 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 	return &attendant, nil
 }
 
+func (a *Attendant) lotBasedOnChoice() *ParkingLot {
+
+	if a.choice == EvenParking {
+		return a.findLeastCarsLot()
+	}
+	if a.choice == MaxCapacityParking {
+		return a.findLotWithMaxCapacity()
+	}
+	for i, p := range a.Parkinglots {
+		if a.parkingStatuses[i] {
+			continue
+		}
+		return p
+	}
+	return nil
+}
+
 func (a *Attendant) Park(car *Car) error {
 	if car == nil {
 		return errors.New("parkinglot:park (by attendant):car cannot be nil")
@@ -64,36 +81,13 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("parkinglot:park (by attendant): car already parked")
 	}
-	if a.choice == EvenParking {
-		lot := a.findLeastCarsLot()
-		if lot == nil {
-			return errors.New("parkinglot:park (choice 2):parking lot is full, attendant cannot park the car")
-		}
-
-		err := lot.park(car)
-
-		return err
-	}
-	if a.choice == MaxCapacityParking {
-		lot := a.findLotWithMaxCapacity()
-		if lot == nil {
-			return errors.New("parkinglot:park (choice 3):parking lot with maximum capacity is full, attendant cannot park the car")
-		}
-
-		err := lot.park(car)
-
-		return err
-	}
-	for i, p := range a.Parkinglots {
-		if a.parkingStatuses[i] {
-			continue
-		}
-		err := p.park(car)
-
-		return err
+	lot := a.lotBasedOnChoice()
+	if lot == nil {
+		return errors.New("parkinglot: park (by attendant): all parkinglots are full")
 	}
 
-	return errors.New("parkinglot: park (choice 1):parking lot is full, attendant cannot park the car")
+	return lot.park(car)
+
 }
 
 func (a *Attendant) UnPark(car *Car) error {
