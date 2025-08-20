@@ -367,3 +367,19 @@ func TestAttendantMaxCapacityChoosesOtherLotWhenLargestIsFull(t *testing.T) {
 		t.Errorf("car3 has to be parked in parkinglot1")
 	}
 }
+
+func TestAttendantMaxCapacityChoosesFirstLotWhenCapacitiesAreEqual(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(3)
+	parkinglot2, _ := NewParkingLot(3)
+	attendant, _ := NewAttendant(MaxCapacityParking, parkinglot1, parkinglot2)
+
+	car1 := &Car{"KK10AA2345"}
+	car2 := &Car{"TN10AA3085"}
+
+	attendant.Park(car1)
+	attendant.Park(car2)
+
+	if !parkinglot1.slots[1].car.isEqual(car2) {
+		t.Errorf("car2 should also be parked in lot1 before lot2 is used")
+	}
+}
