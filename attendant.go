@@ -64,6 +64,10 @@ func (a *Attendant) lotBasedOnChoice() *ParkingLot {
 	if a.choice == MaxCapacityParking {
 		return a.findLotWithMaxCapacity()
 	}
+	return a.firstemptylot()
+}
+
+func (a *Attendant) firstemptylot() *ParkingLot {
 	for i, p := range a.Parkinglots {
 		if a.parkingStatuses[i] {
 			continue
