@@ -215,7 +215,7 @@ func TestAttendantParksInLotWithFewerCars(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(2)
 	parkinglot2, _ := NewParkingLot(2)
 	parkinglot3, _ := NewParkingLot(2)
-	attendant, _ := NewAttendant(EvenParking, parkinglot1, parkinglot2, parkinglot3)
+	attendant, _ := NewAttendant(ParkInLeastFilledLot, parkinglot1, parkinglot2, parkinglot3)
 
 	car1 := &Car{"KA01AA2345"}
 	car2 := &Car{"KA02BB5678"}
@@ -243,7 +243,7 @@ func TestComplexAttendantParksInAccordingToDistributionAfterUnpark(t *testing.T)
 	car4 := &Car{"car4"}
 
 	simpleAttendant, _ := NewAttendant(ParkAtFirstEmptyLot, lot1, lot2)
-	complexAttendant, _ := NewAttendant(EvenParking, lot1, lot2)
+	complexAttendant, _ := NewAttendant(ParkInLeastFilledLot, lot1, lot2)
 
 	err := simpleAttendant.Park(car1)
 	if err != nil {
@@ -313,7 +313,7 @@ func TestCombinationOfAllThreeTypesOfAttendants(t *testing.T) {
 	parkinglot3, _ := NewParkingLot(3)
 
 	attendantSimple, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2, parkinglot3)
-	attendantEven, _ := NewAttendant(EvenParking, parkinglot1, parkinglot2, parkinglot3)
+	attendantEven, _ := NewAttendant(ParkInLeastFilledLot, parkinglot1, parkinglot2, parkinglot3)
 	attendantMax, _ := NewAttendant(MaxCapacityParking, parkinglot1, parkinglot2, parkinglot3)
 
 	car1 := &Car{"KA01AA2345"}

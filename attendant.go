@@ -10,9 +10,9 @@ type ParkingType string
 type choosenLot func(*Attendant) *ParkingLot
 
 const (
-	ParkAtFirstEmptyLot ParkingType = "park in the first empty parkinglot"
-	EvenParking         ParkingType = "evenParking"
-	MaxCapacityParking  ParkingType = "maxCapacityParking"
+	ParkAtFirstEmptyLot  ParkingType = "park in the first empty parkinglot"
+	ParkInLeastFilledLot ParkingType = "park in the parkinglot with least number of cars"
+	MaxCapacityParking   ParkingType = "maxCapacityParking"
 )
 
 type Attendant struct {
@@ -58,7 +58,7 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 
 	switch choice {
 
-	case EvenParking:
+	case ParkInLeastFilledLot:
 		lot = (*Attendant).findLeastCarsLot
 
 	case MaxCapacityParking:
