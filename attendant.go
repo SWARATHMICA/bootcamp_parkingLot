@@ -56,16 +56,17 @@ func (a *Attendant) Park(car *Car) error {
 		if lot == nil {
 			return errors.New("parkinglot:park (choice 2):parking lot is full, attendant cannot park the car")
 		}
-		return lot.park(car)
+
+		err := lot.park(car)
+
+		return err
 	}
 	for i, p := range a.Parkinglots {
 		if a.parkingStatuses[i] {
 			continue
 		}
 		err := p.park(car)
-		if err == nil {
-			return nil
-		}
+
 		return err
 	}
 
