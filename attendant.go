@@ -8,8 +8,9 @@ import (
 type ParkingType string
 
 const (
-	SimpleParking ParkingType = "simpleParking"
-	EvenParking   ParkingType = "evenParking"
+	SimpleParking      ParkingType = "simpleParking"
+	EvenParking        ParkingType = "evenParking"
+	MaxCapacityParking ParkingType = "maxCapacityParking"
 )
 
 type Attendant struct {
@@ -67,6 +68,16 @@ func (a *Attendant) Park(car *Car) error {
 		lot := a.findLeastCarsLot()
 		if lot == nil {
 			return errors.New("parkinglot:park (choice 2):parking lot is full, attendant cannot park the car")
+		}
+
+		err := lot.park(car)
+
+		return err
+	}
+	if a.choice == MaxCapacityParking {
+		lot := a.findLotWithMaxCapacity()
+		if lot == nil {
+			return errors.New("parkinglot:park (choice 3):parking lot with maximum capacity is full, attendant cannot park the car")
 		}
 
 		err := lot.park(car)

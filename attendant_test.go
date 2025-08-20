@@ -293,3 +293,19 @@ func TestAttendantfindLotWithMaxCapacity(t *testing.T) {
 	}
 
 }
+
+func TestAttendantParksInParkingLotWithMaximumCapacity(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(MaxCapacityParking, parkinglot1, parkinglot2)
+
+	car1 := &Car{"KA01AA2345"}
+	car2 := &Car{"KA02BB5678"}
+
+	attendant.Park(car1)
+	attendant.Park(car2)
+
+	if parkinglot2.CarsParkedCount() != 2 {
+		t.Errorf("both cars should be parked in parkinglot2")
+	}
+}
