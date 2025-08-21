@@ -7,7 +7,7 @@ import (
 
 type ParkingType string
 
-type choosenLot func(*Attendant) *ParkingLot
+type choosenLot func(*Attendant) (*ParkingLot, error)
 
 const (
 	ParkAtFirstEmptyLot  ParkingType = "park in the first empty parkinglot"
@@ -21,7 +21,7 @@ type Attendant struct {
 	lotchoice       choosenLot
 }
 
-func (a *Attendant) findLotWithMaxCapacity() *ParkingLot {
+func (a *Attendant) findLotWithMaxCapacity() (*ParkingLot, error) {
 	maxCapacity := 0
 	var parkingLotWithMaxCapacity *ParkingLot
 	for _, p := range a.Parkinglots {
@@ -30,7 +30,10 @@ func (a *Attendant) findLotWithMaxCapacity() *ParkingLot {
 			parkingLotWithMaxCapacity = p
 		}
 	}
-	return parkingLotWithMaxCapacity
+	if parkingLotWithMaxCapacity == nil {
+		return nil, errors.New("parkinglot: findLotWithMaxCapacity: all lots are full")
+	}
+	return parkingLotWithMaxCapacity, nil
 }
 
 func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, error) {
@@ -75,14 +78,14 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 	return &attendant, nil
 }
 
-func (a *Attendant) firstemptylot() *ParkingLot {
+func (a *Attendant) firstemptylot() (*ParkingLot, error) {
 	for i, p := range a.Parkinglots {
 		if a.parkingStatuses[i] {
 			continue
 		}
-		return p
+		return p, nil
 	}
-	return nil
+	return nil, errors.New("parkinglot: firstemptylot: all lots are full")
 }
 
 func (a *Attendant) Park(car *Car) error {
@@ -93,8 +96,10 @@ func (a *Attendant) Park(car *Car) error {
 	if a.checkIsCarParked(car) {
 		return errors.New("parkinglot: park (by attendant): car already parked")
 	}
-	lot := a.lotchoice(a)
-	if lot == nil {
+
+	lot, err := a.lotchoice(a)
+
+	if err != nil {
 		return errors.New("parkinglot: park (by attendant): all parkinglots are full")
 	}
 
@@ -142,9 +147,10 @@ func (a *Attendant) checkIsCarParked(car *Car) bool {
 	return false
 }
 
-func (a *Attendant) findLeastCarsLot() *ParkingLot {
+func (a *Attendant) findLeastCarsLot() (*ParkingLot, error) {
 	var targetLot *ParkingLot
 	minCars := math.MaxInt
+	id := -1
 
 	for i, lot := range a.Parkinglots {
 
@@ -154,10 +160,14 @@ func (a *Attendant) findLeastCarsLot() *ParkingLot {
 		if lot.CarsParkedCount() < minCars {
 			minCars = lot.CarsParkedCount()
 			targetLot = lot
+			id = i
 		}
 
 	}
-	return targetLot //TODO: CHECK nil; doubt: default value is nil
+	if id == -1 {
+		return nil, errors.New("parkinglot: findLeastCarsLot: all parkinglots are full")
+	}
+	return targetLot, nil
 }
 
 func (a *Attendant) receiveAvailable(p *ParkingLot) {

@@ -203,7 +203,7 @@ func TestAttendantfindLeastCarsLot(t *testing.T) {
 	attendant.Park(&car2)
 	attendant.Park(&car3)
 
-	got := attendant.findLeastCarsLot()
+	got, _ := attendant.findLeastCarsLot()
 
 	if got != parkinglot3 {
 		t.Errorf("expected lot2 (fewer cars), got %+v", got)
@@ -283,7 +283,7 @@ func TestAttendantfindLotWithMaxCapacity(t *testing.T) {
 	parkinglot2, _ := NewParkingLot(3)
 	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkinglot1, parkinglot2)
 
-	lotWithMaxCapacity := attendant.findLotWithMaxCapacity()
+	lotWithMaxCapacity, _ := attendant.findLotWithMaxCapacity()
 
 	if lotWithMaxCapacity.capacity != 3 {
 		t.Errorf("parkinglot2 has maximum capacity of 3")
@@ -379,4 +379,48 @@ func TestAttendantMaxCapacityChoosesFirstLotWhenCapacitiesAreEqual(t *testing.T)
 	if !parkinglot1.slots[1].car.isEqual(car2) {
 		t.Errorf("car2 should also be parked in lot1 before lot2 is used")
 	}
+}
+
+func TestFindLeastCarsLotWhenAllLotsAreFull(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(1)
+	attendant, _ := NewAttendant(ParkInLeastFilledLot, parkinglot1, parkinglot2)
+
+	car1 := &Car{"KK10AA1234"}
+	car2 := &Car{"KK10AA1245"}
+	car3 := &Car{"KK10AA1266"}
+
+	attendant.Park(car1)
+	attendant.Park(car2)
+
+	err := attendant.Park(car3)
+	expectedError := "parkinglot: park (by attendant): all parkinglots are full"
+
+	if err.Error() != expectedError {
+		t.Errorf("all parkinglots are full")
+	}
+
+}
+
+func TestFindLotWithMaxCapacitytWhenAllLotsAreFull(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(2)
+	attendant, _ := NewAttendant(ParkInMaxCapacityLot, parkinglot1, parkinglot2)
+
+	car1 := &Car{"KK10AA1234"}
+	car2 := &Car{"KK10AA1245"}
+	car3 := &Car{"KK10AA1266"}
+	car4 := &Car{"KK10AA3456"}
+
+	attendant.Park(car1)
+	attendant.Park(car2)
+	attendant.Park(car3)
+
+	err := attendant.Park(car4)
+	expectedError := "parkinglot: park (by attendant): all parkinglots are full"
+
+	if err.Error() != expectedError {
+		t.Errorf("all parkinglots are full")
+	}
+
 }
