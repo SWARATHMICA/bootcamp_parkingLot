@@ -305,7 +305,7 @@ func TestAttendantParksInParkingLotWithMaximumCapacity(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(1)
 	parkinglot2, _ := NewParkingLot(2)
 	attendant, _ := NewAttendant(ParkInMaxCapacityLot, parkinglot1, parkinglot2)
-
+	lot, _ := attendant.lotchoice(attendant)
 	car1 := &Car{"KA01AA2345"}
 	car2 := &Car{"KA02BB5678"}
 
@@ -313,7 +313,13 @@ func TestAttendantParksInParkingLotWithMaximumCapacity(t *testing.T) {
 	attendant.Park(car2)
 
 	if parkinglot2.CarsParkedCount() != 2 {
-		t.Errorf("both cars should be parked in park")
+		t.Errorf("both cars should be parked in parkingLot2")
+	}
+
+	//Added this assertion for checking if parking policy is assigned using map
+
+	if lot != parkinglot2 {
+		t.Errorf("parkinglot 2 has the maximum capacity")
 	}
 }
 

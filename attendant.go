@@ -21,6 +21,12 @@ type Attendant struct {
 	lotchoice       choosenParkingPolicy
 }
 
+var parkingPolicy = map[ParkingType]choosenParkingPolicy{
+	ParkInLeastFilledLot: (*Attendant).findLeastCarsLot,
+	ParkInMaxCapacityLot: (*Attendant).findLotWithMaxCapacity,
+	ParkAtFirstEmptyLot:  (*Attendant).firstemptylot,
+}
+
 func (a *Attendant) findLotWithMaxCapacity() (*ParkingLot, error) {
 	maxCapacity := 0
 	var parkingLotWithMaxCapacity *ParkingLot
@@ -57,22 +63,7 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 		parkinglot.setParkingAvailableReceiver(&attendant)
 	}
 
-	var lot choosenParkingPolicy
-
-	switch choice {
-
-	case ParkInLeastFilledLot:
-		lot = (*Attendant).findLeastCarsLot
-
-	case ParkInMaxCapacityLot:
-		lot = (*Attendant).findLotWithMaxCapacity
-
-	case ParkAtFirstEmptyLot:
-		lot = (*Attendant).firstemptylot
-
-	default:
-		return nil, errors.New("unknown parking type")
-	}
+	lot := parkingPolicy[choice]
 	attendant.lotchoice = lot
 
 	return &attendant, nil
