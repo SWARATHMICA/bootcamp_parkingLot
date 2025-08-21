@@ -7,7 +7,7 @@ import (
 
 type ParkingType string
 
-type choosenLot func(*Attendant) (*ParkingLot, error)
+type choosenParkingPolicy func(*Attendant) (*ParkingLot, error)
 
 const (
 	ParkAtFirstEmptyLot  ParkingType = "park in the first empty parkinglot"
@@ -18,7 +18,7 @@ const (
 type Attendant struct {
 	Parkinglots     []*ParkingLot
 	parkingStatuses []bool
-	lotchoice       choosenLot
+	lotchoice       choosenParkingPolicy
 }
 
 func (a *Attendant) findLotWithMaxCapacity() (*ParkingLot, error) {
@@ -57,7 +57,7 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 		parkinglot.setParkingAvailableReceiver(&attendant)
 	}
 
-	var lot choosenLot
+	var lot choosenParkingPolicy
 
 	switch choice {
 
