@@ -108,11 +108,7 @@ func (a *Attendant) Park(car *Car) error {
 }
 
 func (a *Attendant) UnPark(car *Car) error {
-	if !a.checkIsCarParked(car) {
-		return errors.New("parkinglot: unpark (by attendant): car is not parked")
-	}
 
-	var err error
 	for i, parkinglot := range a.Parkinglots {
 		if !parkinglot.isParked(car) {
 			continue
@@ -125,7 +121,7 @@ func (a *Attendant) UnPark(car *Car) error {
 		return nil
 	}
 
-	return err
+	return errors.New("parkinglot: unpark (by attendant): car is not parked")
 }
 
 func (a *Attendant) receiveFull(p *ParkingLot) {

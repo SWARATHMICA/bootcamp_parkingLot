@@ -59,6 +59,16 @@ func TestUnParkCarByAttendant(t *testing.T) {
 	}
 }
 
+func TestCarWhichIsNotParkedShouldNotBeUnparked(t *testing.T) {
+	parkingLot, _ := NewParkingLot(1)
+	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkingLot)
+
+	err := attendant.UnPark(&car)
+	if err == nil {
+		t.Errorf("car is not parked in the parking lot")
+	}
+}
+
 func TestAttendantParkAfterParkingAvailable(t *testing.T) {
 	parkingLot, _ := NewParkingLot(1)
 	attendant, _ := NewAttendant(ParkAtFirstEmptyLot, parkingLot)
