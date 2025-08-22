@@ -323,6 +323,21 @@ func TestAttendantParksInParkingLotWithMaximumCapacity(t *testing.T) {
 	}
 }
 
+func TestDefault(t *testing.T) {
+	parkinglot1, _ := NewParkingLot(1)
+	parkinglot2, _ := NewParkingLot(2)
+	parkinglot3, _ := NewParkingLot(3)
+	attendant, _ := NewAttendant("", parkinglot1, parkinglot2, parkinglot3)
+
+	attendant.Park(&car)
+
+	lot, _ := attendant.lotchoice(attendant)
+
+	if lot != parkinglot2 {
+		t.Errorf("expected default strategy to pick the first lot, got %+v", lot)
+	}
+}
+
 func TestCombinationOfAllThreeTypesOfAttendants(t *testing.T) {
 	parkinglot1, _ := NewParkingLot(1)
 	parkinglot2, _ := NewParkingLot(2)

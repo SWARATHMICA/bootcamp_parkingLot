@@ -64,6 +64,9 @@ func NewAttendant(choice ParkingType, parkingLots ...*ParkingLot) (*Attendant, e
 	}
 
 	lot := parkingPolicy[choice]
+	if lot == nil {
+		lot = parkingPolicy[ParkAtFirstEmptyLot]
+	}
 	attendant.lotchoice = lot
 
 	return &attendant, nil
