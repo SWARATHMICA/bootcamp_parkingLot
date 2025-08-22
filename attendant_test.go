@@ -455,3 +455,7 @@ func TestFindLotWithMaxCapacitytWhenAllLotsAreFull(t *testing.T) {
 	}
 
 }
+
+func TestTriggerWorkflow(t *testing.T) {
+	//do something
+}
